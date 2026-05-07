@@ -54,7 +54,7 @@ function Button({
     children?: React.ReactNode
   }) {
   if (asChild) {
-    const child = React.Children.only(children)
+    const child = React.Children.only(children) as React.ReactElement<any>
 
     if (!React.isValidElement(child)) {
       throw new Error("Button con asChild requiere un único elemento React.")
@@ -67,7 +67,7 @@ function Button({
 
     const mergedProps: Record<string, unknown> = {
       ...rest,
-      className: cn(buttonVariants({ variant, size, className }), child.props.className),
+      className: cn(buttonVariants({ variant, size, className }), child.props?.className),
     }
 
     if (disabled) {
@@ -77,7 +77,7 @@ function Button({
         event.preventDefault?.()
       }
     } else if (onClick) {
-      const childOnClick = child.props.onClick as ((event: unknown) => void) | undefined
+      const childOnClick = child.props?.onClick as ((event: unknown) => void) | undefined
       mergedProps["onClick"] = (event: unknown) => {
         childOnClick?.(event)
         onClick(event)
