@@ -54,7 +54,10 @@ function Button({
     children?: React.ReactNode
   }) {
   if (asChild) {
-    const child = React.Children.only(children) as React.ReactElement<any>
+    const child = React.Children.only(children) as React.ReactElement<{
+      className?: string
+      onClick?: any
+    }>
 
     if (!React.isValidElement(child)) {
       throw new Error("Button con asChild requiere un único elemento React.")
