@@ -86,10 +86,7 @@ function DropdownMenuItem({
   asChild?: boolean
 }) {
   if (asChild) {
-    const child = React.Children.only(children) as React.ReactElement<{
-      className?: string
-      onClick?: any
-    }>
+    const child = React.Children.only(children) as React.ReactElement<any>
     return React.cloneElement(child, {
       "data-slot": "dropdown-menu-item",
       "data-inset": inset,
@@ -104,7 +101,7 @@ function DropdownMenuItem({
         child.props?.onClick?.(e)
         props.onClick?.(e)
       },
-    })
+    } as any)
   }
 
   return (
