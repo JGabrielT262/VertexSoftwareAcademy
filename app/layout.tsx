@@ -19,8 +19,30 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Vertex Software Academy",
-  description: "Construye tu futuro con programación real.",
+  title: "Vertex Software Academy | Formaci\u00F3n Técnica Industrial Avanzada",
+  description: "Aprende programación real, automatización industrial, sistemas SCADA y redes. La academia líder para ingenieros y desarrolladores del futuro.",
+  keywords: ["programación industrial", "sistemas SCADA", "automatización", "redes industriales", "academia de software", "Vertex Software"],
+  openGraph: {
+    title: "Vertex Software Academy",
+    description: "Domina la tecnología industrial y el desarrollo de software de alto nivel.",
+    url: "https://vertexsoftware.online",
+    siteName: "Vertex Software Academy",
+    images: [
+      {
+        url: "/vertex-logo.png",
+        width: 800,
+        height: 600,
+      },
+    ],
+    locale: "es_PE",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Vertex Software Academy",
+    description: "Formación técnica avanzada en programación y automatización.",
+    images: ["/vertex-logo.png"],
+  },
 };
 
 function getPageKeyFromPathname(pathname: string) {
