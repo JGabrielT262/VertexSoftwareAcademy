@@ -7,6 +7,7 @@ import { motion, useReducedMotion } from "framer-motion";
 function getPageKey(pathname: string) {
   const segment = pathname.split("?")[0]?.split("#")[0]?.split("/")[1] ?? "";
   if (!segment) return "home";
+  if (segment === "software") return "software";
   if (segment === "acerca-de-nosotros") return "acerca";
   if (segment === "login" || segment === "register") return "auth";
   if (segment === "dashboard") return "dashboard";
@@ -42,6 +43,13 @@ export function RouteTransitions({ children }: { children: React.ReactNode }) {
         leftBlob: "top-24 -left-44 h-[26rem] w-[26rem]",
         grid: "[background-size:110px_110px]",
         sweep: "rotate-[14deg] scale-110",
+      },
+      software: {
+        topBlob: "-top-32 left-[52%] -translate-x-1/2 h-[36rem] w-[36rem]",
+        rightBlob: "-bottom-48 -right-44 h-[32rem] w-[32rem]",
+        leftBlob: "top-28 -left-48 h-[30rem] w-[30rem]",
+        grid: "[background-size:104px_104px]",
+        sweep: "rotate-[10deg] scale-110",
       },
       cursos: {
         topBlob: "-top-36 left-[62%] -translate-x-1/2 h-[36rem] w-[36rem]",
@@ -158,17 +166,19 @@ export function RouteTransitions({ children }: { children: React.ReactNode }) {
         className="pointer-events-none absolute inset-0 z-10"
         initial={{ opacity: 1 }}
         animate={{ opacity: 0 }}
-        transition={{ duration: 0.22, ease: "easeOut" }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0F172A] via-[#0F172A]/70 to-transparent" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(var(--accent-1),0.18),transparent_60%),radial-gradient(ellipse_at_bottom,rgba(var(--accent-2),0.16),transparent_60%)]" />
+        <div className="absolute inset-0 bg-[#f8fafc]/50 backdrop-blur-sm" />
       </motion.div>
 
       <motion.div
         key={pathname}
-        initial={false}
+        initial={{ opacity: 0, y: 8, filter: "blur(10px)" }}
         animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        transition={{ duration: 0.18, ease: "easeOut" }}
+        transition={{ 
+          duration: 0.4, 
+          ease: [0.22, 1, 0.36, 1] // Custom cubic-bezier for a "premium" feel
+        }}
       >
         {children}
       </motion.div>

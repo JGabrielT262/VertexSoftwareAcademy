@@ -91,7 +91,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:py-14">
+    <div className="w-full px-4 py-10 sm:py-14">
       <div className="grid gap-6 lg:grid-cols-2 lg:items-stretch">
         <Card className="relative w-full rounded-xl border-white/10 bg-white/5">
           <CardHeader>

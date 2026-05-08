@@ -125,30 +125,30 @@ export default async function CourseDetailPage({
   }));
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-12">
+    <div className="w-full px-4 py-12">
       <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
         <div className="max-w-2xl">
-          <h1 className="text-3xl font-semibold tracking-tight">
+          <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
             {course.title ?? "Curso"}
           </h1>
-          <p className="mt-3 text-white/70">{course.description ?? "—"}</p>
+          <p className="mt-3 text-slate-600">{course.description ?? "—"}</p>
           <div className="mt-4 flex flex-wrap gap-2 text-xs">
-            <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-1 text-white/80">
+            <span className="inline-flex items-center gap-1 border border-slate-200 bg-white px-2 py-1 text-slate-900">
               <BadgeCheck className="size-3.5" />
               Certificado
             </span>
             {course.level ? (
-              <span className="rounded-full bg-white/10 px-2 py-1">
+              <span className="border border-slate-200 bg-white px-2 py-1 text-slate-700">
                 {course.level}
               </span>
             ) : null}
             {course.duration ? (
-              <span className="rounded-full bg-white/10 px-2 py-1">
+              <span className="border border-slate-200 bg-white px-2 py-1 text-slate-700">
                 {course.duration}
               </span>
             ) : null}
             {typeof course.price === "number" ? (
-              <span className="rounded-full bg-white/10 px-2 py-1">
+              <span className="border border-slate-200 bg-white px-2 py-1 text-slate-700">
                 S/ {course.price}
               </span>
             ) : null}
@@ -156,11 +156,11 @@ export default async function CourseDetailPage({
         </div>
 
         <div className="w-full max-w-sm">
-          <Card className="border-white/10 bg-white/5">
+          <Card className="border-slate-200 bg-white">
             <CardHeader>
-              <CardTitle className="text-base">Acceso</CardTitle>
+              <CardTitle className="text-base text-slate-900">Acceso</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4 text-sm text-white/70">
+            <CardContent className="space-y-4 text-sm text-slate-600">
               {course.id === "demo-course" ? (
                 <div>
                   Vista demo. Configura Supabase y publica el curso para activar
@@ -193,7 +193,7 @@ export default async function CourseDetailPage({
                 </Button>
               )}
 
-              <Button asChild variant="secondary" className="w-full bg-white/10">
+              <Button asChild variant="outline" className="w-full border-slate-200 bg-white text-slate-900 hover:bg-slate-50">
                 <Link href="/cursos">Ver otros cursos</Link>
               </Button>
             </CardContent>
@@ -202,15 +202,15 @@ export default async function CourseDetailPage({
       </div>
 
       <div className="mt-10 grid gap-4 lg:grid-cols-2">
-        <Card className="border-white/10 bg-white/5">
+        <Card className="border-slate-200 bg-white">
           <CardHeader>
-            <CardTitle className="text-base">Módulos y lecciones</CardTitle>
+            <CardTitle className="text-base text-slate-900">Módulos y lecciones</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-sm text-white/70">
+          <CardContent className="space-y-4 text-sm text-slate-600">
             {lessonsByModule.length ? (
               lessonsByModule.map(({ module, lessons: moduleLessons }) => (
                 <div key={module.id} className="space-y-2">
-                  <div className="font-medium text-white">
+                  <div className="font-medium text-slate-900">
                     {module.title ?? "Módulo"}
                   </div>
                   <div className="space-y-1">
@@ -218,34 +218,34 @@ export default async function CourseDetailPage({
                       moduleLessons.map((l) => (
                         <div
                           key={l.id}
-                          className="flex items-center justify-between gap-4 rounded-xl border border-white/10 bg-white/5 px-3 py-2"
+                          className="flex items-center justify-between gap-4 border border-slate-200 bg-white px-3 py-2"
                         >
                           <div className="truncate">{l.title ?? "Lección"}</div>
-                          <div className="text-xs text-white/60">
+                          <div className="text-xs text-slate-500">
                             {l.is_preview ? "Preview" : "Solo inscritos"}
                           </div>
                         </div>
                       ))
                     ) : (
-                      <div className="text-white/60">Sin lecciones aún.</div>
+                      <div className="text-slate-500">Sin lecciones aún.</div>
                     )}
                   </div>
                 </div>
               ))
             ) : (
-              <div className="text-white/60">
+              <div className="text-slate-500">
                 Aún no hay módulos publicados para este curso.
               </div>
             )}
           </CardContent>
         </Card>
 
-        <Card className="border-white/10 bg-white/5">
+        <Card className="border-slate-200 bg-white">
           <CardHeader>
-            <CardTitle className="text-base">Reproductor (MVP)</CardTitle>
+            <CardTitle className="text-base text-slate-900">Reproductor (MVP)</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3 text-sm text-white/70">
-            <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
+          <CardContent className="space-y-3 text-sm text-slate-600">
+            <div className="border border-slate-200 bg-slate-50 p-4">
               Integra aquí YouTube privado, Vimeo, Bunny o Cloudflare Stream.
             </div>
             <div>

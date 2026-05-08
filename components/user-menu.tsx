@@ -54,11 +54,11 @@ export function UserMenu({
       <DropdownMenuTrigger
         disabled={loading}
         className={cn(
-          buttonVariants({ variant: "secondary" }),
-          "bg-white/10 text-white hover:bg-white/15"
+          buttonVariants({ variant: "outline" }),
+          "border-slate-200 bg-white text-slate-900 hover:bg-slate-50"
         )}
       >
-        <span className="mr-2 inline-flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-white/5 text-[11px] font-semibold text-white/90">
+        <span className="mr-2 inline-flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-[11px] font-semibold text-slate-900">
           {name ? initialsFromName(name) : "V"}
         </span>
         <span className="max-w-[140px] truncate">

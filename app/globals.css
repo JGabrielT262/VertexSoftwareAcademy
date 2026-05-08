@@ -72,7 +72,7 @@
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
-  --radius: 0.85rem;
+  --radius: 0.55rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -83,6 +83,7 @@
   --sidebar-ring: oklch(0.708 0 0);
 
   --page-base: #070a12;
+  --page-fg: #0f172a;
   --header-bg: rgba(7, 10, 18, 0.55);
   --accent-1: 59, 130, 246;
   --accent-2: 124, 58, 237;
@@ -130,47 +131,96 @@ html[data-aula="1"] [data-site-bg] {
 }
 
 html[data-page="home"] {
-  --page-base: #070a12;
-  --header-bg: rgba(7, 10, 18, 0.55);
-  --accent-1: 59, 130, 246;
-  --accent-2: 124, 58, 237;
+  --page-base: #ffffff;
+  --page-fg: #0f172a;
+  --header-bg: rgba(255, 255, 255, 0.9);
+  --accent-1: 37, 99, 235;
+  --accent-2: 59, 130, 246;
+  --accent-3: 34, 211, 238;
+}
+
+html[data-page="software"] {
+  --page-base: #ffffff;
+  --page-fg: #0f172a;
+  --header-bg: rgba(255, 255, 255, 0.9);
+  --accent-1: 37, 99, 235;
+  --accent-2: 59, 130, 246;
   --accent-3: 34, 211, 238;
 }
 
 html[data-page="cursos"] {
-  --page-base: #060a12;
-  --header-bg: rgba(6, 10, 18, 0.56);
-  --accent-1: 56, 189, 248;
+  --page-base: #ffffff;
+  --page-fg: #0f172a;
+  --header-bg: rgba(255, 255, 255, 0.9);
+  --accent-1: 37, 99, 235;
   --accent-2: 59, 130, 246;
   --accent-3: 34, 211, 238;
 }
 
 html[data-page="planes"] {
-  --page-base: #050d10;
-  --header-bg: rgba(5, 13, 16, 0.56);
-  --accent-1: 16, 185, 129;
-  --accent-2: 34, 211, 238;
-  --accent-3: 59, 130, 246;
+  --page-base: #ffffff;
+  --page-fg: #0f172a;
+  --header-bg: rgba(255, 255, 255, 0.9);
+  --accent-1: 37, 99, 235;
+  --accent-2: 59, 130, 246;
+  --accent-3: 34, 211, 238;
 }
 
 html[data-page="cronograma"] {
-  --page-base: #0d0708;
-  --header-bg: rgba(13, 7, 8, 0.56);
-  --accent-1: 245, 158, 11;
-  --accent-2: 236, 72, 153;
-  --accent-3: 168, 85, 247;
+  --page-base: #ffffff;
+  --page-fg: #0f172a;
+  --header-bg: rgba(255, 255, 255, 0.9);
+  --accent-1: 37, 99, 235;
+  --accent-2: 59, 130, 246;
+  --accent-3: 34, 211, 238;
 }
 
 html[data-page="acerca"] {
-  --page-base: #070614;
-  --header-bg: rgba(7, 6, 20, 0.56);
-  --accent-1: 168, 85, 247;
+  --page-base: #ffffff;
+  --page-fg: #0f172a;
+  --header-bg: rgba(255, 255, 255, 0.9);
+  --accent-1: 37, 99, 235;
   --accent-2: 59, 130, 246;
-  --accent-3: 236, 72, 153;
+  --accent-3: 34, 211, 238;
+}
+
+html[data-page="home"] [data-site-header] .site-nav-link,
+html[data-page="software"] [data-site-header] .site-nav-link,
+html[data-page="cursos"] [data-site-header] .site-nav-link,
+html[data-page="planes"] [data-site-header] .site-nav-link,
+html[data-page="acerca"] [data-site-header] .site-nav-link,
+html[data-page="cronograma"] [data-site-header] .site-nav-link {
+  position: relative;
+  padding: 0.25rem 0;
+}
+
+html[data-page="home"] [data-site-header] [data-nav="home"],
+html[data-page="software"] [data-site-header] [data-nav="software"],
+html[data-page="cursos"] [data-site-header] [data-nav="cursos"],
+html[data-page="planes"] [data-site-header] [data-nav="planes"],
+html[data-page="acerca"] [data-site-header] [data-nav="acerca"],
+html[data-page="cronograma"] [data-site-header] [data-nav="cursos"] {
+  color: rgb(var(--accent-1));
+}
+
+html[data-page="home"] [data-site-header] [data-nav="home"]::after,
+html[data-page="software"] [data-site-header] [data-nav="software"]::after,
+html[data-page="cursos"] [data-site-header] [data-nav="cursos"]::after,
+html[data-page="planes"] [data-site-header] [data-nav="planes"]::after,
+html[data-page="acerca"] [data-site-header] [data-nav="acerca"]::after,
+html[data-page="cronograma"] [data-site-header] [data-nav="cursos"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.55rem;
+  height: 2px;
+  background: rgb(var(--accent-1));
 }
 
 html[data-page="auth"] {
   --page-base: #070615;
+  --page-fg: #ffffff;
   --header-bg: rgba(7, 6, 21, 0.56);
   --accent-1: 236, 72, 153;
   --accent-2: 59, 130, 246;
@@ -179,6 +229,7 @@ html[data-page="auth"] {
 
 html[data-page="dashboard"] {
   --page-base: #060815;
+  --page-fg: #ffffff;
   --header-bg: rgba(6, 8, 21, 0.56);
   --accent-1: 99, 102, 241;
   --accent-2: 56, 189, 248;
@@ -187,6 +238,7 @@ html[data-page="dashboard"] {
 
 html[data-page="admin"] {
   --page-base: #0e070a;
+  --page-fg: #ffffff;
   --header-bg: rgba(14, 7, 10, 0.56);
   --accent-1: 244, 63, 94;
   --accent-2: 245, 158, 11;
@@ -195,6 +247,7 @@ html[data-page="admin"] {
 
 html[data-page="aula"] {
   --page-base: #ffffff;
+  --page-fg: #0f172a;
   --header-bg: rgba(255, 255, 255, 0.9);
   --accent-1: 45, 156, 155; /* Teal */
   --accent-2: 159, 95, 159; /* Purple */

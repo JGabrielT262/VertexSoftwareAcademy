@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import { Geist_Mono, Inter } from "next/font/google";
 import { headers } from "next/headers";
 import "./globals.css";
 import { Toaster } from "sonner";
@@ -8,7 +8,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { RouteTransitions } from "@/components/route-transitions";
 
-const vertexSans = Plus_Jakarta_Sans({
+const vertexSans = Inter({
   variable: "--font-vertex-sans",
   subsets: ["latin"],
 });
@@ -19,14 +19,27 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Vertex Software Academy | Formaci\u00F3n Técnica Industrial Avanzada",
-  description: "Aprende programación real, automatización industrial, sistemas SCADA y redes. La academia líder para ingenieros y desarrolladores del futuro.",
-  keywords: ["programación industrial", "sistemas SCADA", "automatización", "redes industriales", "academia de software", "Vertex Software"],
+  metadataBase: new URL("https://vertexsoftware.online"),
+  title: "Vertex Software",
+  description:
+    "Software a medida y formación técnica: sistemas, automatización, integraciones y cursos vinculados al aula virtual.",
+  keywords: [
+    "vertex software",
+    "software a medida",
+    "automatización",
+    "integraciones",
+    "cursos de programación",
+    "aula virtual",
+  ],
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
-    title: "Vertex Software Academy",
-    description: "Domina la tecnología industrial y el desarrollo de software de alto nivel.",
+    title: "Vertex Software",
+    description:
+      "Software a medida y formación técnica: sistemas, automatización, integraciones y cursos vinculados al aula virtual.",
     url: "https://vertexsoftware.online",
-    siteName: "Vertex Software Academy",
+    siteName: "Vertex Software",
     images: [
       {
         url: "/vertex-logo.png",
@@ -39,8 +52,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vertex Software Academy",
-    description: "Formación técnica avanzada en programación y automatización.",
+    title: "Vertex Software",
+    description:
+      "Software a medida y formación técnica: sistemas, automatización, integraciones y cursos.",
     images: ["/vertex-logo.png"],
   },
 };
@@ -48,6 +62,7 @@ export const metadata: Metadata = {
 function getPageKeyFromPathname(pathname: string) {
   const segment = pathname.split("?")[0]?.split("#")[0]?.split("/")[1] ?? "";
   if (!segment) return "home";
+  if (segment === "software") return "software";
   if (segment === "acerca-de-nosotros") return "acerca";
   if (segment === "login" || segment === "register") return "auth";
   if (segment === "dashboard") return "dashboard";
@@ -68,6 +83,21 @@ export default async function RootLayout({
   const pathname = hdrs.get("x-vsa-pathname") ?? "/";
   const pageKey = getPageKeyFromPathname(pathname);
   const isAula = pageKey === "aula";
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: "Vertex Software",
+      url: "https://vertexsoftware.online",
+      logo: "https://vertexsoftware.online/vertex-logo.png",
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "Vertex Software",
+      url: "https://vertexsoftware.online",
+    },
+  ];
 
   return (
     <html
@@ -76,7 +106,11 @@ export default async function RootLayout({
       data-page={pageKey}
       data-aula={isAula ? "1" : undefined}
     >
-      <body className="min-h-full flex flex-col bg-[var(--page-base)] text-white font-sans">
+      <body className="min-h-full flex flex-col bg-[var(--page-base)] text-[color:var(--page-fg)] font-sans">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
         {isAula ? null : (
           <div data-site-bg className="pointer-events-none fixed inset-0 -z-10">
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(var(--accent-1),0.24),transparent_52%),radial-gradient(ellipse_at_bottom,rgba(var(--accent-2),0.22),transparent_52%),radial-gradient(ellipse_at_left,rgba(var(--accent-3),0.14),transparent_55%)]" />

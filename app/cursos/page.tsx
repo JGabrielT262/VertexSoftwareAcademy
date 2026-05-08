@@ -2,12 +2,10 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PageHeroVisual } from "@/components/page-hero-visual";
-import { Reveal } from "@/components/reveal";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getSiteContent } from "@/lib/site-content";
-import { BadgeCheck } from "lucide-react";
+import { BadgeCheck, Clock, Calendar } from "lucide-react";
+import { COURSES_DATA, Course } from "@/lib/courses-data";
 
 type CourseRow = {
   id: string;
@@ -16,6 +14,7 @@ type CourseRow = {
   description: string | null;
   thumbnail: string | null;
   price: number | null;
+  priceUSD: number | null;
   level: string | null;
   duration: string | null;
   published: boolean | null;
@@ -26,6 +25,15 @@ type ModuleRow = {
   course_id: string | null;
   title: string | null;
   position: number | null;
+};
+
+type Temporada = {
+  id: string;
+  course: string;
+  startDate: string;
+  endDate: string;
+  schedule: string;
+  status: "activa" | "pasada" | "proxima";
 };
 
 export default async function CoursesPage() {
@@ -77,164 +85,25 @@ export default async function CoursesPage() {
     }
   }
 
+  if (source === "supabase" && courses.length < 20) {
+    source = "demo";
+    courses = [];
+    modulesByCourseId.clear();
+  }
+
   if (source === "demo" && courses.length === 0) {
-    courses = [
-      {
-        id: "demo-web-fullstack",
-        title: "Desarrollo Web Full Stack",
-        slug: "desarrollo-web-full-stack",
-        description:
-          "HTML, CSS, JavaScript, React, Next.js, Node.js y PostgreSQL con proyectos reales.",
-        thumbnail:
-          "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1200&q=80",
-        price: 249,
-        level: "Desde cero",
-        duration: "12 semanas",
-        published: true,
-      },
-      {
-        id: "demo-python",
-        title: "Python Profesional",
-        slug: "python-profesional",
-        description: "APIs, automatización, IA y scraping con buenas prácticas.",
-        thumbnail:
-          "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?auto=format&fit=crop&w=1200&q=80",
-        price: 199,
-        level: "Intermedio",
-        duration: "8 semanas",
-        published: true,
-      },
-      {
-        id: "demo-sql",
-        title: "SQL y Bases de Datos",
-        slug: "sql-y-bases-de-datos",
-        description:
-          "PostgreSQL, modelado, consultas, índices y buenas prácticas para producción.",
-        thumbnail:
-          "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?auto=format&fit=crop&w=1200&q=80",
-        price: 149,
-        level: "Desde cero",
-        duration: "6 semanas",
-        published: true,
-      },
-      {
-        id: "demo-supabase",
-        title: "Supabase + PostgreSQL (RLS en serio)",
-        slug: "supabase-postgresql-rls",
-        description:
-          "Auth, Storage, Row Level Security, políticas y patrones para apps reales.",
-        thumbnail:
-          "https://images.unsplash.com/photo-1555066932-e78dd8fb77bb?auto=format&fit=crop&w=1200&q=80",
-        price: 179,
-        level: "Intermedio",
-        duration: "5 semanas",
-        published: true,
-      },
-      {
-        id: "demo-nextjs",
-        title: "Next.js para Producción",
-        slug: "nextjs-para-produccion",
-        description:
-          "App Router, auth, middleware, rendimiento, SEO y despliegue en Vercel.",
-        thumbnail:
-          "https://images.unsplash.com/photo-1523474253046-8cd2748b5fd2?auto=format&fit=crop&w=1200&q=80",
-        price: 189,
-        level: "Intermedio",
-        duration: "6 semanas",
-        published: true,
-      },
-      {
-        id: "demo-react-native",
-        title: "React Native con Expo",
-        slug: "react-native-con-expo",
-        description:
-          "Apps Android/iOS con Expo, APIs, notificaciones y publicación.",
-        thumbnail:
-          "https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=1200&q=80",
-        price: 219,
-        level: "Intermedio",
-        duration: "8 semanas",
-        published: true,
-      },
-      {
-        id: "demo-ia-apps",
-        title: "Creación de Apps con IA (LLMs)",
-        slug: "creacion-de-apps-con-ia-llms",
-        description:
-          "Integra IA en tus aplicaciones: prompts, RAG básico, herramientas y buenas prácticas.",
-        thumbnail:
-          "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80",
-        price: 299,
-        level: "Intermedio",
-        duration: "6 semanas",
-        published: true,
-      },
-      {
-        id: "demo-prompt",
-        title: "Prompt Engineering",
-        slug: "prompt-engineering",
-        description:
-          "Técnicas para prompts útiles: estructura, evaluación, guardrails y contexto.",
-        thumbnail:
-          "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80",
-        price: 129,
-        level: "Desde cero",
-        duration: "3 semanas",
-        published: true,
-      },
-      {
-        id: "demo-ia-sql",
-        title: "SQL con IA (consultas, optimización y análisis)",
-        slug: "sql-con-ia",
-        description:
-          "Aprende a mejorar consultas con IA, interpretar planes, optimizar y documentar.",
-        thumbnail:
-          "https://images.unsplash.com/photo-1559136656-3db4bf6c7b1f?auto=format&fit=crop&w=1200&q=80",
-        price: 169,
-        level: "Intermedio",
-        duration: "4 semanas",
-        published: true,
-      },
-      {
-        id: "demo-data",
-        title: "Data Engineering para Devs",
-        slug: "data-engineering-para-devs",
-        description:
-          "ETL/ELT, modelado analítico, calidad de datos y pipelines modernos.",
-        thumbnail:
-          "https://images.unsplash.com/photo-1451188502541-13943edb6acb?auto=format&fit=crop&w=1200&q=80",
-        price: 249,
-        level: "Intermedio",
-        duration: "8 semanas",
-        published: true,
-      },
-      {
-        id: "demo-apis",
-        title: "APIs Profesionales (REST + buenas prácticas)",
-        slug: "apis-profesionales-rest",
-        description:
-          "Diseño de APIs, validación, auth, rate limiting y documentación.",
-        thumbnail:
-          "https://images.unsplash.com/photo-1556075798-4825dfaaf498?auto=format&fit=crop&w=1200&q=80",
-        price: 179,
-        level: "Desde cero",
-        duration: "5 semanas",
-        published: true,
-      },
-      {
-        id: "demo-devops",
-        title: "DevOps para Desarrolladores",
-        slug: "devops-para-desarrolladores",
-        description:
-          "Git workflows, CI/CD, despliegue, observabilidad y prácticas para equipos.",
-        thumbnail:
-          "https://images.unsplash.com/photo-1551033406-611cf9a28f3a?auto=format&fit=crop&w=1200&q=80",
-        price: 229,
-        level: "Intermedio",
-        duration: "6 semanas",
-        published: true,
-      },
-    ];
+    courses = COURSES_DATA.map(c => ({
+      ...c,
+      title: c.title,
+      slug: c.slug,
+      description: c.description,
+      thumbnail: c.thumbnail,
+      price: c.price,
+      priceUSD: c.priceUSD,
+      level: c.level,
+      duration: c.duration,
+      published: c.published
+    }));
   }
 
   const heroImageUrl = await getSiteContent<string>(
@@ -243,198 +112,248 @@ export default async function CoursesPage() {
   );
 
   return (
-    <div className="relative overflow-hidden">
-      <div className="pointer-events-none absolute inset-x-0 -top-24 h-72 bg-[radial-gradient(ellipse_at_top,rgba(59,130,246,0.35),transparent_60%),radial-gradient(ellipse_at_left,rgba(34,211,238,0.18),transparent_55%)]" />
-      <div className="mx-auto w-full max-w-6xl px-4 py-12">
-      <div className="grid gap-8 lg:grid-cols-2 lg:items-start">
-        <Reveal>
+    <div>
+    <div className="bg-[#f8fafc]">
+      <section className="w-full px-4 pt-12 pb-16 sm:pt-16">
+        <div className="mx-auto max-w-[1200px] grid gap-12 lg:grid-cols-[1fr_420px] lg:items-center">
           <div>
-            <h1 className="text-3xl font-semibold tracking-tight">Cursos</h1>
-            <p className="mt-2 text-white/70">
-              {source === "supabase"
-                ? "Cursos publicados desde Supabase."
-                : "Vista demo. Configura Supabase para ver tus cursos reales."}
+            <div className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-600 mb-3">
+              Vertex Academy • Advanced Systems
+            </div>
+            <h1 className="text-4xl lg:text-5xl font-black tracking-tighter text-slate-900 uppercase">
+              Cursos <span className="text-blue-600">Disponibles</span>
+            </h1>
+            <p className="mt-5 max-w-xl text-sm font-medium leading-relaxed text-slate-500">
+              Programas de especialización técnica orientados a la arquitectura de software y automatización industrial. Domina los stacks más demandados con metodología basada en proyectos.
             </p>
-            <p className="mt-1 text-sm text-white/60">
-              Aquí tienes dos formas de aprender: suscripción mensual (para cursos en
-              vivo y recursos según tu plan) o compra de curso individual (clases
-              privadas / contenido independiente).
-            </p>
-            <p className="mt-2 text-sm text-white/60">
-              La suscripción es mensual y se renueva automáticamente hasta que la
-              canceles. Las clases en vivo se organizan por temporadas (ciclos).
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Button asChild className="bg-blue-600 hover:bg-blue-500">
-                <Link href="/planes">Ver planes</Link>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <Button asChild className="h-12 rounded-sm bg-slate-900 px-8 text-[10px] font-black uppercase tracking-widest text-white hover:bg-slate-800 shadow-xl shadow-slate-200">
+                <Link href="/planes">Planes Elite</Link>
               </Button>
-              <Button asChild variant="secondary" className="bg-white/10">
-                <Link href="/cronograma">Ver cronograma</Link>
-              </Button>
-              <Button asChild variant="secondary" className="bg-white/10">
-                <Link href="/dashboard">Ir al dashboard</Link>
+              <Button asChild variant="outline" className="h-12 rounded-sm border-slate-200 bg-white px-8 text-[10px] font-black uppercase tracking-widest text-slate-900 hover:bg-slate-50">
+                <Link href="/aula-virtual">Aula Virtual</Link>
               </Button>
             </div>
           </div>
-        </Reveal>
 
-        <Reveal delay={0.06}>
-          <PageHeroVisual
-            title="Catálogo de cursos"
-            subtitle="Cursos individuales + acceso por suscripción mensual."
-            imageUrl={heroImageUrl}
-            variant="blue"
-          />
-        </Reveal>
-      </div>
+          <div className="relative group">
+            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-sm shadow-2xl">
+              <Image
+                src={heroImageUrl}
+                alt="Cursos Vertex Software"
+                fill
+                sizes="(max-width: 1024px) 100vw, 420px"
+                className="object-cover transition-transform duration-1000 group-hover:scale-110"
+                priority
+              />
+              <div className="absolute inset-0 bg-gradient-to-tr from-slate-900/40 via-transparent to-transparent" />
+            </div>
+            <div className="absolute -bottom-6 -right-6 h-32 w-32 bg-blue-600/5 -z-10" />
+          </div>
+        </div>
+      </section>
 
-      <div className="mt-8 grid gap-4 lg:grid-cols-2">
-        <Reveal>
-          <Card className="border-white/10 bg-white/5">
-            <CardHeader>
-              <CardTitle className="text-base">Suscripción mensual</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm text-white/70">
-              <div>
-                Tu plan se mantiene activo mes a mes hasta que lo canceles. Con la
-                suscripción puedes acceder a cursos en vivo (temporadas), grabaciones y
-                soporte según tu plan.
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-xs text-white/60">
-                Revisa el cronograma para ver la temporada activa, las pasadas y las
-                próximas con fechas de inicio y fin.
-              </div>
-              <div className="flex flex-wrap gap-3">
-                <Button asChild className="bg-blue-600 hover:bg-blue-500">
-                  <Link href="/planes">Ver planes</Link>
-                </Button>
-                <Button asChild variant="secondary" className="bg-white/10">
-                  <Link href="/cronograma">Ver cronograma</Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </Reveal>
+      <section id="cronograma" className="w-full px-4 pb-16">
+        <div className="mx-auto max-w-[1200px]">
+          {(() => {
+            const temporadas: Temporada[] = [
+              {
+                id: "t-python-2026-1",
+                course: "Python Profesional",
+                startDate: "12 May 2026",
+                endDate: "06 Jul 2026",
+                schedule: "Martes y Jueves • 19:00 - 21:30",
+                status: "activa",
+              },
+              {
+                id: "t-ia-apps-2026-1",
+                course: "AI & LLMs Ops",
+                startDate: "15 Jul 2026",
+                endDate: "26 Ago 2026",
+                schedule: "Lunes y Miércoles • 20:00 - 22:00",
+                status: "proxima",
+              },
+              {
+                id: "t-next-2026-1",
+                course: "Next.js Core",
+                startDate: "02 Sep 2026",
+                endDate: "14 Oct 2026",
+                schedule: "Sábados • 09:00 - 13:00",
+                status: "proxima",
+              },
+            ];
 
-        <Reveal delay={0.05}>
-          <Card className="border-white/10 bg-white/5">
-            <CardHeader>
-              <CardTitle className="text-base">Cursos individuales</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm text-white/70">
-              <div>
-                Compra un curso específico por separado (independiente de la suscripción).
-                Ideal si quieres un tema puntual o clases privadas.
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-xs text-white/60">
-                Tip: si estás en una temporada activa, el acceso se gestiona por plan. Si
-                compras un curso individual, el acceso es aparte.
-              </div>
-            </CardContent>
-          </Card>
-        </Reveal>
-      </div>
-
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {courses.map((course) => {
-          const title = course.title ?? "Curso";
-          const slug = course.slug ?? "";
-          const href = slug ? `/cursos/${slug}` : "/cursos";
-          const modules = modulesByCourseId.get(course.id) ?? [];
-          const topModules = modules.slice(0, 3);
-
-          return (
-            <Card key={course.id} className="v3d-tilt border-white/10 bg-white/5">
-              <CardHeader>
-                <div className="relative aspect-[16/9] overflow-hidden rounded-2xl border border-white/10 bg-white/5">
-                  {course.thumbnail ? (
-                    <Image
-                      src={course.thumbnail}
-                      alt={title}
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 420px"
-                      className="object-cover opacity-90"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-violet-600/20" />
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/65 via-transparent to-transparent" />
-                  <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between gap-3">
-                    <div className="truncate text-sm font-semibold text-white">{title}</div>
-                    <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#0F172A]/55 px-2 py-1 text-xs text-white/85 backdrop-blur">
-                      <BadgeCheck className="size-3.5" />
-                      Certificado
-                    </span>
+            return (
+              <div className="bg-white border-y border-x border-slate-200 rounded-sm overflow-hidden shadow-sm">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 border-b border-slate-100 bg-slate-50/50">
+                  <div>
+                    <h2 className="text-[10px] font-black text-blue-600 tracking-[0.3em] uppercase">Cronograma Operativo</h2>
+                    <p className="text-xl font-black text-slate-900 uppercase tracking-tighter mt-1">Lanzamientos Temporada 2026</p>
                   </div>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4 text-sm text-white/70">
-                <p>{course.description ?? "—"}</p>
-                <div className="flex flex-wrap gap-2 text-xs">
-                  {course.level ? (
-                    <span className="rounded-full bg-white/10 px-2 py-1">
-                      {course.level}
-                    </span>
-                  ) : null}
-                  {course.duration ? (
-                    <span className="rounded-full bg-white/10 px-2 py-1">
-                      {course.duration}
-                    </span>
-                  ) : null}
-                  {typeof course.price === "number" ? (
-                    <span className="rounded-full bg-white/10 px-2 py-1">
-                      Curso individual: S/ {course.price}
-                    </span>
-                  ) : null}
-                  {source === "supabase" ? (
-                    <span className="rounded-full bg-white/10 px-2 py-1">
-                      {modules.length} módulos
-                    </span>
-                  ) : null}
-                </div>
-
-                {source === "supabase" && topModules.length ? (
-                  <div className="space-y-2">
-                    <div className="text-xs text-white/60">Módulos:</div>
-                    <div className="flex flex-wrap gap-2">
-                      {topModules.map((m) => (
-                        <span
-                          key={m.id}
-                          className="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-xs text-white/70"
-                        >
-                          {m.title ?? "Módulo"}
-                        </span>
-                      ))}
-                      {modules.length > topModules.length ? (
-                        <span className="rounded-full bg-white/10 px-2 py-1 text-xs text-white/60">
-                          +{modules.length - topModules.length}
-                        </span>
-                      ) : null}
+                  <div className="flex gap-4">
+                    <div className="flex items-center gap-2">
+                      <span className="h-2 w-2 rounded-none bg-teal-500" />
+                      <span className="text-[9px] font-black text-slate-400 uppercase">Activo</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="h-2 w-2 rounded-none bg-blue-500" />
+                      <span className="text-[9px] font-black text-slate-400 uppercase">Programado</span>
                     </div>
                   </div>
-                ) : null}
-
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <Button
-                    asChild
-                    className="w-full bg-white/10 hover:bg-white/15"
-                    variant="secondary"
-                    disabled={!slug}
-                  >
-                    <Link href={href}>Ver temario</Link>
-                  </Button>
-                  <Button asChild className="w-full bg-blue-600 hover:bg-blue-500" disabled={!slug}>
-                    <Link href={`/aula-virtual?checkout=course&courseSlug=${encodeURIComponent(slug)}`}>
-                      Contratar
-                    </Link>
-                  </Button>
                 </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-      </div>
+
+                <div className="divide-y divide-slate-100">
+                  {temporadas.map((t) => (
+                    <div 
+                      key={t.id} 
+                      className={`group flex flex-col md:flex-row items-center gap-6 p-6 transition-all hover:bg-slate-50 ${
+                        t.status === 'activa' ? 'bg-blue-50/10' : ''
+                      }`}
+                    >
+                      <div className="flex flex-col items-center justify-center shrink-0 w-16 h-16 border border-slate-100 bg-white">
+                        <p className="text-[9px] font-black text-slate-400 uppercase">Mes</p>
+                        <p className="text-lg font-black text-slate-900 uppercase leading-none mt-1">
+                          {t.startDate.split(' ')[1]}
+                        </p>
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-3">
+                          <h4 className="text-sm font-black text-slate-900 uppercase tracking-tight truncate">{t.course}</h4>
+                          {t.status === 'activa' && (
+                            <span className="px-2 py-0.5 bg-teal-100 text-teal-700 text-[8px] font-black uppercase tracking-widest">En Vivo</span>
+                          )}
+                        </div>
+                        <div className="mt-2 flex flex-wrap gap-x-6 gap-y-2">
+                          <div className="flex items-center gap-2 text-slate-400">
+                            <Clock className="size-3 text-blue-600" />
+                            <span className="text-[10px] font-bold uppercase">{t.schedule}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-slate-400">
+                            <Calendar className="size-3 text-blue-600" />
+                            <span className="text-[10px] font-bold uppercase">{t.startDate} - {t.endDate}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="shrink-0 flex items-center gap-4">
+                        <Button variant="outline" size="sm" className="h-9 rounded-sm border-slate-200 text-[9px] font-black uppercase tracking-widest hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all">
+                          Ver Detalles
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
+        </div>
+      </section>
+
+
+      <section className="w-full px-4 pb-20">
+        <div className="mx-auto max-w-[1200px]">
+          <div className="flex items-end justify-between gap-6 mb-10">
+            <div>
+              <h2 className="text-[10px] font-black text-blue-600 tracking-[0.3em] uppercase">Catálogo Técnico</h2>
+              <h3 className="text-3xl font-black text-slate-900 uppercase tracking-tighter italic mt-1">Stacks de <span className="text-blue-600">Ingeniería</span></h3>
+              <p className="mt-3 max-w-xl text-xs font-bold text-slate-400 uppercase tracking-wide">
+                Dominio total de herramientas industriales y patrones de desarrollo avanzado.
+              </p>
+            </div>
+            <Button asChild variant="outline" className="hidden h-10 rounded-xl border-slate-200 bg-white px-6 text-[10px] font-black uppercase tracking-widest text-slate-900 hover:bg-slate-50 sm:inline-flex">
+              <Link href="/contactenos">Consultar Stacks</Link>
+            </Button>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {courses.map((course) => {
+              const title = course.title ?? "Curso";
+              const slug = course.slug ?? "";
+              const href = slug ? `/cursos/${slug}` : "/cursos";
+              
+              return (
+                <div key={course.id} className="group relative bg-white border border-slate-100 rounded-sm overflow-hidden transition-all duration-500 hover:border-blue-500 hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-2">
+                  <div className="relative aspect-[16/10] overflow-hidden">
+                    {course.thumbnail ? (
+                      <Image
+                        src={course.thumbnail}
+                        alt={title}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 400px"
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-slate-900" />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent" />
+                    
+                    <div className="absolute top-4 left-4">
+                      <div className="bg-white/90 backdrop-blur-md px-3 py-1 rounded-none text-[9px] font-black text-slate-900 uppercase tracking-widest shadow-xl">
+                        {course.level ?? 'General'}
+                      </div>
+                    </div>
+
+                    <div className="absolute bottom-4 left-4 right-4">
+                      <h4 className="text-base font-black text-white leading-tight uppercase tracking-tighter">
+                        {title}
+                      </h4>
+                      <div className="flex items-center gap-2 mt-2">
+                        <BadgeCheck className="size-3 text-blue-400" />
+                        <span className="text-[9px] font-black text-blue-100 uppercase tracking-[0.2em]">Certificación Vertex</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-6">
+                    <p className="text-xs font-medium text-slate-500 leading-relaxed min-h-[40px]">
+                      {course.description ?? "Explora los fundamentos y técnicas avanzadas en este stack especializado."}
+                    </p>
+
+                    <div className="mt-6 flex items-center justify-between border-t border-slate-50 pt-4">
+                      <div className="space-y-1">
+                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Duración</p>
+                        <p className="text-[11px] font-black text-slate-900 uppercase">{course.duration ?? '8 Semanas'}</p>
+                      </div>
+                      <div className="h-8 w-px bg-slate-100" />
+                      <div className="text-right">
+                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Inversión</p>
+                        <p className="text-base font-black text-blue-600 leading-none">
+                          {typeof course.price === "number" ? `S/ ${course.price}` : 'Consultar'}
+                        </p>
+                        <p className="text-[10px] font-black text-slate-400 mt-1 uppercase">
+                          {typeof course.priceUSD === "number" ? `$ ${course.priceUSD} USD` : ''}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-6 grid grid-cols-2 gap-3">
+                      <Button
+                        asChild
+                        variant="ghost"
+                        className="h-10 rounded-sm text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-blue-600 hover:bg-blue-50"
+                      >
+                        <Link href={href}>Detalles</Link>
+                      </Button>
+                      <Button
+                        asChild
+                        className="h-10 rounded-sm bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 shadow-lg shadow-blue-500/20 transition-all hover:scale-[1.05]"
+                      >
+                        <Link href={`/aula-virtual?checkout=course&courseSlug=${encodeURIComponent(slug)}`}>
+                          Inscribirme
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+        </div>
+      </section>
+    </div>
+
     </div>
   );
 }

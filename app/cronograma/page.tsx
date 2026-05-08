@@ -1,9 +1,7 @@
 import Link from "next/link";
+import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PageHeroVisual } from "@/components/page-hero-visual";
-import { Reveal } from "@/components/reveal";
 import { getSiteContent } from "@/lib/site-content";
 
 type Temporada = {
@@ -67,139 +65,115 @@ export default async function CronogramaPage() {
   }
 
   return (
-    <div className="relative overflow-hidden">
-      <div className="pointer-events-none absolute inset-x-0 -top-24 h-72 bg-[radial-gradient(ellipse_at_top,rgba(251,191,36,0.22),transparent_60%),radial-gradient(ellipse_at_left,rgba(251,113,133,0.16),transparent_55%)]" />
-      <div className="mx-auto w-full max-w-6xl px-4 py-12">
-      <div className="grid gap-8 lg:grid-cols-2 lg:items-start">
-        <Reveal>
+    <div>
+      <section className="w-full px-4 pt-10 pb-14 sm:pt-16">
+        <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
           <div>
-            <h1 className="text-3xl font-semibold tracking-tight">
-              Cronograma de temporadas
+            <div className="text-sm font-semibold text-slate-600">Cronograma</div>
+            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-slate-900">
+              Temporadas
             </h1>
-            <p className="mt-2 max-w-3xl text-white/70">
-              Las clases en vivo se organizan por temporadas (ciclos). Aquí ves la
-              temporada activa, las pasadas y las próximas con fecha de inicio y fin.
+            <p className="mt-4 max-w-3xl text-slate-600">
+              Las clases en vivo se organizan por temporadas (ciclos). Aquí ves la temporada activa, las pasadas y las próximas con fecha de inicio y fin.
             </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Button asChild className="bg-blue-600 hover:bg-blue-500">
+            <div className="mt-6 flex flex-wrap gap-2">
+              <Button asChild className="h-11 rounded-md bg-slate-900 px-5 text-white hover:bg-slate-800">
                 <Link href="/planes">Ver planes</Link>
               </Button>
-              <Button asChild variant="secondary" className="bg-white/10">
+              <Button asChild variant="outline" className="h-11 rounded-md border-slate-200 bg-white px-5 text-slate-900 hover:bg-slate-50">
                 <Link href="/cursos">Ver cursos</Link>
               </Button>
             </div>
           </div>
-        </Reveal>
 
-        <Reveal delay={0.06}>
-          <PageHeroVisual
-            title="Calendario de clases"
-            subtitle="Temporada activa, pasadas y próximas."
-            imageUrl={heroImageUrl}
-            variant="amber"
-          />
-        </Reveal>
-      </div>
+          <div className="overflow-hidden rounded-md border border-slate-200 bg-white">
+            <div className="relative aspect-[16/10] w-full">
+              <Image
+                src={heroImageUrl}
+                alt="Calendario de clases"
+                fill
+                sizes="(max-width: 1024px) 100vw, 520px"
+                className="object-cover"
+                priority
+              />
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <div className="mt-10 space-y-10">
-        <section>
-          <h2 className="text-xl font-semibold tracking-tight">
-            Temporada activa
-          </h2>
-          <div className="mt-4 grid gap-4 lg:grid-cols-3">
-            {activa.length ? (
-              activa.map((t) => (
-                <Card
-                  key={t.id}
-                  className="v3d-tilt border-blue-500/40 bg-gradient-to-b from-blue-500/10 to-violet-600/10"
-                >
-                  <CardHeader>
-                    <CardTitle className="text-base">{t.course}</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3 text-sm text-white/70">
-                    <div className="flex flex-wrap gap-2 text-xs">
-                      <span className="rounded-full bg-white/10 px-2 py-1">
+      <section className="w-full px-4 pb-20">
+        <div className="grid gap-10">
+          <section>
+            <h2 className="text-2xl font-semibold tracking-tight text-slate-900">
+              Temporada activa
+            </h2>
+            <div className="mt-4 grid gap-4 lg:grid-cols-3">
+              {activa.length ? (
+                activa.map((t) => (
+                  <div key={t.id} className="rounded-md border border-slate-200 bg-white p-5">
+                    <div className="text-base font-semibold text-slate-900">{t.course}</div>
+                    <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-700">
+                      <span className="border border-slate-200 bg-white px-2 py-1">
                         {label(t.status)}
                       </span>
-                      <span className="rounded-full bg-white/10 px-2 py-1">
+                      <span className="border border-slate-200 bg-white px-2 py-1">
                         Inicio: {t.startDate}
                       </span>
-                      <span className="rounded-full bg-white/10 px-2 py-1">
+                      <span className="border border-slate-200 bg-white px-2 py-1">
                         Fin: {t.endDate}
                       </span>
                     </div>
-                    <div>{t.schedule}</div>
-                  </CardContent>
-                </Card>
-              ))
-            ) : (
-              <Card className="v3d-tilt border-white/10 bg-white/5 lg:col-span-3">
-                <CardHeader>
-                  <CardTitle className="text-base">Sin temporada activa</CardTitle>
-                </CardHeader>
-                <CardContent className="text-sm text-white/70">
-                  Publica una temporada para mostrarla aquí.
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        </section>
-
-        <section>
-          <h2 className="text-xl font-semibold tracking-tight">Próximas temporadas</h2>
-          <div className="mt-4 grid gap-4 lg:grid-cols-3">
-            {proximas.map((t) => (
-              <Card key={t.id} className="v3d-tilt border-white/10 bg-white/5">
-                <CardHeader>
-                  <CardTitle className="text-base">{t.course}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3 text-sm text-white/70">
-                  <div className="flex flex-wrap gap-2 text-xs">
-                    <span className="rounded-full bg-white/10 px-2 py-1">
-                      {label(t.status)}
-                    </span>
-                    <span className="rounded-full bg-white/10 px-2 py-1">
-                      Inicio: {t.startDate}
-                    </span>
-                    <span className="rounded-full bg-white/10 px-2 py-1">
-                      Fin: {t.endDate}
-                    </span>
+                    <div className="mt-3 text-sm text-slate-600">{t.schedule}</div>
                   </div>
-                  <div>{t.schedule}</div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
+                ))
+              ) : (
+                <div className="rounded-md border border-slate-200 bg-white p-5 lg:col-span-3">
+                  <div className="text-base font-semibold text-slate-900">Sin temporada activa</div>
+                  <div className="mt-2 text-sm text-slate-600">Publica una temporada para mostrarla aquí.</div>
+                </div>
+              )}
+            </div>
+          </section>
 
-        <section>
-          <h2 className="text-xl font-semibold tracking-tight">Temporadas pasadas</h2>
-          <div className="mt-4 grid gap-4 lg:grid-cols-3">
-            {pasadas.map((t) => (
-              <Card key={t.id} className="v3d-tilt border-white/10 bg-white/5">
-                <CardHeader>
-                  <CardTitle className="text-base">{t.course}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3 text-sm text-white/70">
-                  <div className="flex flex-wrap gap-2 text-xs">
-                    <span className="rounded-full bg-white/10 px-2 py-1">
-                      {label(t.status)}
-                    </span>
-                    <span className="rounded-full bg-white/10 px-2 py-1">
-                      Inicio: {t.startDate}
-                    </span>
-                    <span className="rounded-full bg-white/10 px-2 py-1">
-                      Fin: {t.endDate}
-                    </span>
+          <section>
+            <h2 className="text-2xl font-semibold tracking-tight text-slate-900">
+              Próximas temporadas
+            </h2>
+            <div className="mt-4 grid gap-4 lg:grid-cols-3">
+              {proximas.map((t) => (
+                <div key={t.id} className="rounded-md border border-slate-200 bg-white p-5">
+                  <div className="text-base font-semibold text-slate-900">{t.course}</div>
+                  <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-700">
+                    <span className="border border-slate-200 bg-white px-2 py-1">{label(t.status)}</span>
+                    <span className="border border-slate-200 bg-white px-2 py-1">Inicio: {t.startDate}</span>
+                    <span className="border border-slate-200 bg-white px-2 py-1">Fin: {t.endDate}</span>
                   </div>
-                  <div>{t.schedule}</div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
-      </div>
-      </div>
+                  <div className="mt-3 text-sm text-slate-600">{t.schedule}</div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold tracking-tight text-slate-900">
+              Temporadas pasadas
+            </h2>
+            <div className="mt-4 grid gap-4 lg:grid-cols-3">
+              {pasadas.map((t) => (
+                <div key={t.id} className="rounded-md border border-slate-200 bg-white p-5">
+                  <div className="text-base font-semibold text-slate-900">{t.course}</div>
+                  <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-700">
+                    <span className="border border-slate-200 bg-white px-2 py-1">{label(t.status)}</span>
+                    <span className="border border-slate-200 bg-white px-2 py-1">Inicio: {t.startDate}</span>
+                    <span className="border border-slate-200 bg-white px-2 py-1">Fin: {t.endDate}</span>
+                  </div>
+                  <div className="mt-3 text-sm text-slate-600">{t.schedule}</div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+      </section>
     </div>
   );
 }

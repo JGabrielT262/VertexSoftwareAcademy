@@ -18,7 +18,7 @@ export async function SiteHeader() {
 
   const contactEmail = await getSiteContent<string>(
     "contact.email",
-    "contacto@vertexsoftwareacademy.com"
+    "contacto@vertexsoftware.online"
   );
   const contactPhone = await getSiteContent<string>("contact.phone", "+51 900 000 000");
 
@@ -39,46 +39,46 @@ export async function SiteHeader() {
   return (
     <header
       data-site-header
-      className="sticky top-0 z-50 border-b border-white/10 bg-[var(--header-bg)] backdrop-blur relative"
+      className="sticky top-0 z-50 border-b border-slate-200/80 bg-[var(--header-bg)] backdrop-blur"
     >
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-[linear-gradient(to_right,transparent,rgba(var(--accent-1),0.70),rgba(var(--accent-2),0.70),transparent)]" />
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-3 font-sans">
+      <div className="flex h-20 w-full items-center justify-between px-4">
+        <Link href="/" className="flex items-center font-sans">
           <Image
             src="/vertex-logo.png"
-            alt="Vertex Software Academy"
-            width={40}
-            height={40}
-            className="h-10 w-10 rounded-2xl object-cover"
+            alt="Vertex Software"
+            width={900}
+            height={312}
+            className="h-9 w-auto object-contain"
             priority
           />
-          <span className="text-base font-semibold tracking-tight text-white">
-            Vertex Software Academy
-          </span>
         </Link>
 
-        <nav className="hidden items-center gap-6 font-sans text-sm text-white/75 md:flex">
-          <Link href="/" className="hover:text-white">
+        <nav className="hidden items-center gap-6 font-sans text-sm text-slate-600 md:flex">
+          <Link href="/" data-nav="home" className="site-nav-link hover:text-slate-900">
             Inicio
           </Link>
-          <Link href="/cursos" className="hover:text-white">
+          <Link href="/software" data-nav="software" className="site-nav-link hover:text-slate-900">
+            Software
+          </Link>
+          <Link href="/cursos" data-nav="cursos" className="site-nav-link hover:text-slate-900">
             Cursos
           </Link>
-          <Link href="/planes" className="hover:text-white">
+          <Link href="/planes" data-nav="planes" className="site-nav-link hover:text-slate-900">
             Planes
           </Link>
-          <Link href="/cronograma" className="hover:text-white">
-            Cronograma
-          </Link>
-          <Link href="/acerca-de-nosotros" className="hover:text-white">
-            Acerca de nosotros
+          <Link
+            href="/acerca-de-nosotros"
+            data-nav="acerca"
+            className="site-nav-link hover:text-slate-900"
+          >
+            Empresa
           </Link>
         </nav>
 
         <div className="flex items-center gap-3">
           {user ? (
             <>
-              <Button asChild variant="secondary" className="bg-white/10">
+              <Button asChild variant="outline" className="border-slate-200 bg-white text-slate-900 hover:bg-slate-50">
                 <Link
                   href="/aula-virtual"
                   target="_blank"
@@ -90,13 +90,13 @@ export async function SiteHeader() {
               <ContactDialog
                 contactEmail={contactEmail}
                 contactPhone={contactPhone}
-                triggerClassName="bg-white/10"
+                triggerClassName="border border-slate-200 bg-white text-slate-900 hover:bg-slate-50"
               />
               <UserMenu email={user.email ?? null} name={userName} />
             </>
           ) : (
             <>
-              <Button asChild variant="secondary" className="bg-white/10">
+              <Button asChild variant="outline" className="border-slate-200 bg-white text-slate-900 hover:bg-slate-50">
                 <Link
                   href="/aula-virtual/login"
                   target="_blank"
@@ -108,11 +108,11 @@ export async function SiteHeader() {
               <ContactDialog
                 contactEmail={contactEmail}
                 contactPhone={contactPhone}
-                triggerClassName="bg-white/10"
+                triggerClassName="border border-slate-200 bg-white text-slate-900 hover:bg-slate-50"
               />
               <Button
                 asChild
-                className="bg-gradient-to-r from-[rgba(var(--accent-1),1)] to-[rgba(var(--accent-2),1)] text-white hover:brightness-110"
+                className="bg-slate-900 text-white hover:bg-slate-800"
               >
                 <Link
                   href="/aula-virtual/register"

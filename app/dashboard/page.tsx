@@ -21,7 +21,7 @@ export default async function DashboardPage() {
 
   if (!hasEnv) {
     return (
-      <div className="mx-auto w-full max-w-6xl px-4 py-12">
+      <div className="w-full px-4 py-12">
         <h1 className="text-3xl font-semibold tracking-tight">Dashboard</h1>
         <p className="mt-2 text-white/70">
           Configura Supabase (.env.local) para activar el dashboard real.
@@ -54,7 +54,7 @@ export default async function DashboardPage() {
   const safeEnrollments = enrollments ?? [];
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-12">
+    <div className="w-full px-4 py-12">
       <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Dashboard</h1>

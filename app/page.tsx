@@ -1,378 +1,153 @@
-"use client";
-
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PageHeroVisual } from "@/components/page-hero-visual";
-import { Reveal } from "@/components/reveal";
-import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
+import { Input } from "@/components/ui/input";
+import { getSiteContent } from "@/lib/site-content";
 
-export default function Home() {
-  const fallbackHeroImageUrl =
-    "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80";
+export default async function Home() {
+  const heroImageUrl = await getSiteContent<string>(
+    "home.hero.imageUrl",
+    "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1600&q=80"
+  );
 
-  const hasEnv = useMemo(() => {
-    return (
-      !!process.env.NEXT_PUBLIC_SUPABASE_URL &&
-      (!!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-        !!process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY)
-    );
-  }, []);
-
-  const [heroImageUrl, setHeroImageUrl] = useState(fallbackHeroImageUrl);
-
-  useEffect(() => {
-    if (!hasEnv) return;
-
-    let canceled = false;
-
-    (async () => {
-      try {
-        const supabase = createSupabaseBrowserClient();
-        const { data } = await supabase
-          .from("site_content")
-          .select("value")
-          .eq("key", "home.hero.imageUrl")
-          .maybeSingle<{ value: unknown }>();
-
-        const value = typeof data?.value === "string" ? data.value : null;
-        if (!canceled && value) setHeroImageUrl(value);
-      } catch {}
-    })();
-
-    return () => {
-      canceled = true;
-    };
-  }, [hasEnv]);
-
-  const featuredCourses = [
-    {
-      title: "Desarrollo Web Full Stack",
-      description:
-        "HTML, CSS, JavaScript, React, Next.js, Node.js y PostgreSQL con proyectos reales.",
-      level: "Desde cero",
-      duration: "12 semanas",
-    },
-    {
-      title: "Python Profesional",
-      description: "APIs, automatización, IA y scraping con buenas prácticas.",
-      level: "Intermedio",
-      duration: "8 semanas",
-    },
-    {
-      title: "React Native",
-      description: "Expo, consumo de APIs y publicación en Android/iOS.",
-      level: "Intermedio",
-      duration: "8 semanas",
-    },
-    {
-      title: "SQL y Bases de Datos",
-      description: "PostgreSQL + Supabase, modelado y consultas para producción.",
-      level: "Desde cero",
-      duration: "6 semanas",
-    },
-  ];
-
-  const benefits = [
-    "Proyectos reales guiados paso a paso",
-    "Clases en vivo y grabadas",
-    "Acceso por suscripción y control de progreso",
-    "Panel del estudiante moderno",
-  ];
-
-  const tech = ["Next.js", "React", "TypeScript", "Node.js", "PostgreSQL", "Supabase"];
-
-  const aiAutomation = [
-    {
-      title: "Automatización con IA",
-      text: "Crea flujos para ahorrar tiempo: extracción de datos, reportes, limpieza y generación de contenido con control y trazabilidad.",
-    },
-    {
-      title: "Apps con IA (LLMs)",
-      text: "Integra chat, asistentes y herramientas en tus apps con prompts, validación, streaming y seguridad.",
-    },
-    {
-      title: "IA para bases de datos",
-      text: "Convierte preguntas en SQL, analiza rendimiento, y documenta consultas con ayuda de IA sin perder el control del resultado.",
-    },
-    {
-      title: "RAG básico",
-      text: "Construye búsqueda con contexto: documentos, embeddings, recuperación y respuestas basadas en datos reales.",
-    },
-  ];
-
-  const paths = [
-    {
-      title: "Ruta Full Stack",
-      items: ["Web moderna", "APIs", "Auth", "Bases de datos", "Deploy"],
-    },
-    {
-      title: "Ruta Python + Automatización",
-      items: ["Scripts", "APIs", "Scraping", "Tareas programadas", "Reportes"],
-    },
-    {
-      title: "Ruta Datos + SQL",
-      items: ["SQL", "Modelado", "Optimización", "Supabase", "RLS"],
-    },
-    {
-      title: "Ruta IA aplicada",
-      items: ["Prompts", "RAG básico", "Integración en apps", "Buenas prácticas"],
-    },
-  ];
-
-  const howItWorks = [
-    {
-      title: "Regístrate",
-      text: "Crea tu cuenta y accede al aula virtual.",
-    },
-    {
-      title: "Inscríbete",
-      text: "Elige un curso o plan y se habilita el acceso según tu inscripción.",
-    },
-    {
-      title: "Aprende por módulos",
-      text: "Contenido ordenado por módulos y lecciones, con recursos y proyectos.",
-    },
-    {
-      title: "Construye proyectos",
-      text: "Avanza con entregables reales para tu portafolio.",
-    },
-  ];
-
-  const faqs = [
-    {
-      q: "¿Necesito experiencia previa?",
-      a: "No. Tenemos rutas desde cero y material complementario para nivelarte rápido.",
-    },
-    {
-      q: "¿Cómo se accede a las clases?",
-      a: "Desde tu dashboard. Si estás inscrito, verás clases en vivo y grabaciones.",
-    },
-    {
-      q: "¿Puedo ver una clase de prueba?",
-      a: "Sí. Los cursos pueden incluir lecciones de preview (is_preview) visibles sin inscripción.",
-    },
-    {
-      q: "¿Qué incluye la suscripción?",
-      a: "Acceso a cursos habilitados, recursos y seguimiento de progreso según tu plan.",
-    },
+  const popular = [
+    "Software a medida",
+    "Automatización",
+    "Integraciones",
+    "Cursos",
+    "Aula virtual",
   ];
 
   return (
-    <div className="relative overflow-hidden">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(59,130,246,0.35),transparent_55%),radial-gradient(ellipse_at_bottom,rgba(124,58,237,0.30),transparent_55%)]" />
+    <div className="relative overflow-hidden bg-slate-50/50">
+      {/* Decorative Background Elements */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-[1400px] pointer-events-none">
+        <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-100/30 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[10%] left-[-10%] w-[400px] h-[400px] bg-indigo-100/20 rounded-full blur-[100px]" />
+      </div>
 
-      <section className="relative mx-auto max-w-6xl px-4 py-16 sm:py-24">
-        <div className="grid gap-10 md:grid-cols-2 md:items-center">
-          <div>
-            <motion.h1
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl"
-            >
-              Aprende programación desde cero y construye proyectos reales.
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.05 }}
-              className="mt-4 max-w-xl text-pretty text-lg text-white/70"
-            >
-              Plataforma moderna para estudiar, ver clases, seguir tu progreso y
-              acceder a contenido según tu suscripción.
-            </motion.p>
+      <section className="relative w-full px-4 pt-10 pb-14 sm:pt-20 sm:pb-24">
+        <div className="mx-auto max-w-[1400px] grid gap-16 lg:grid-cols-2 lg:items-center">
+          <div className="relative order-2 lg:order-1">
+            <div className="absolute -left-8 -top-8 h-24 w-24 border-2 border-blue-600/10 rounded-full" />
+            <div className="absolute -right-8 -bottom-8 h-32 w-32 border-2 border-indigo-600/10 rounded-full" />
 
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="mt-8 flex flex-col gap-3 sm:flex-row"
-            >
-              <Button asChild className="bg-blue-600 hover:bg-blue-500">
-                <Link href="/cursos">Ver cursos</Link>
-              </Button>
-              <Button asChild variant="secondary" className="bg-white/10">
-                <Link href="/register">Comenzar ahora</Link>
-              </Button>
-              <Button asChild variant="secondary" className="bg-white/10">
-                <Link href="/planes">Ver planes</Link>
-              </Button>
-            </motion.div>
+            <div className="relative overflow-hidden rounded-2xl border border-white shadow-2xl shadow-blue-500/10 group">
+              <div className="relative aspect-[16/10] w-full overflow-hidden">
+                <Image
+                  src={heroImageUrl}
+                  alt="Vertex Software"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 600px"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-blue-900/20 to-transparent" />
+              </div>
+            </div>
+
+            <div className="absolute -right-6 top-12 hidden w-64 border border-white/50 bg-white/80 backdrop-blur-md p-4 rounded-xl shadow-xl sm:block transition-transform hover:-translate-y-1">
+              <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-1">Dual Core</p>
+              <p className="text-xs font-bold text-slate-700">Cursos y software industrial en una sola marca.</p>
+            </div>
           </div>
 
-          <PageHeroVisual
-            title="Dashboard futurista"
-            subtitle="Aula virtual, progreso y recursos en un solo lugar."
-            imageUrl={heroImageUrl}
-            variant="violet"
-          />
-        </div>
-      </section>
-
-      <section className="relative mx-auto max-w-6xl px-4 pb-16">
-        <Reveal>
-          <div className="flex items-end justify-between gap-6">
-            <div>
-              <h2 className="text-2xl font-semibold tracking-tight">
-                Cursos destacados
-              </h2>
-              <p className="mt-2 text-white/70">
-                Rutas claras, enfoque práctico y acceso controlado por inscripción.
+          <div className="relative z-10 order-1 lg:order-2 space-y-8">
+            <div className="space-y-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100/50 border border-blue-100 rounded-full">
+                <span className="flex h-2 w-2 rounded-full bg-blue-600 animate-pulse" />
+                <span className="text-[10px] font-black text-blue-700 uppercase tracking-[0.2em]">Vertex Software Academy</span>
+              </div>
+              <h1 className="text-balance text-6xl font-black tracking-tighter text-slate-900 leading-[0.95] uppercase italic">
+                Crece con <span className="text-blue-600">tecnología</span> profesional
+              </h1>
+              <p className="max-w-xl text-lg text-slate-500 leading-relaxed font-medium">
+                Software industrial a medida, automatización e integraciones. Formamos a tu equipo técnico con una metodología orientada a producción.
               </p>
             </div>
-            <Button
-              asChild
-              variant="secondary"
-              className="hidden bg-white/10 sm:inline-flex"
-            >
-              <Link href="/cursos">Ver todos</Link>
-            </Button>
+
+            <div className="flex w-full max-w-xl gap-3">
+              <Input
+                placeholder="¿Qué necesitas construir?"
+                className="h-14 rounded-2xl border-white bg-white shadow-xl shadow-blue-900/5 text-slate-900 placeholder:text-slate-400 px-6"
+              />
+              <Button className="h-14 rounded-2xl bg-blue-600 px-8 text-white hover:bg-blue-700 font-black uppercase tracking-widest shadow-xl shadow-blue-500/30 transition-all hover:scale-105">
+                Cotizar
+              </Button>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 text-[11px] font-black uppercase tracking-widest text-slate-400">
+              <span className="text-slate-900 mr-2">Especialidades:</span>
+              {popular.map((p) => (
+                <Link
+                  key={p}
+                  href="/contactenos"
+                  className="rounded-full border border-white bg-white/50 px-4 py-1.5 text-slate-700 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all shadow-sm"
+                >
+                  {p}
+                </Link>
+              ))}
+            </div>
           </div>
-
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {featuredCourses.map((c) => (
-              <Card
-                key={c.title}
-                className="v3d-tilt border-white/10 bg-white/5"
-              >
-                <CardHeader>
-                  <CardTitle className="text-base">{c.title}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3 text-sm text-white/70">
-                  <p>{c.description}</p>
-                  <div className="flex flex-wrap gap-2 text-xs">
-                    <span className="rounded-full bg-white/10 px-2 py-1">
-                      {c.level}
-                    </span>
-                    <span className="rounded-full bg-white/10 px-2 py-1">
-                      {c.duration}
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </Reveal>
-      </section>
-
-      <section className="relative mx-auto max-w-6xl px-4 pb-16">
-        <Reveal delay={0.05}>
-          <div className="grid gap-8 lg:grid-cols-2 lg:items-start">
-            <Card className="border-white/10 bg-white/5">
-              <CardHeader>
-                <CardTitle className="text-xl">Beneficios</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 text-white/70">
-                {benefits.map((b) => (
-                  <div key={b} className="flex gap-3">
-                    <div className="mt-1 h-2 w-2 rounded-full bg-blue-500" />
-                    <div>{b}</div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-
-            <Card className="border-white/10 bg-white/5">
-              <CardHeader>
-                <CardTitle className="text-xl">Tecnologías</CardTitle>
-              </CardHeader>
-              <CardContent className="flex flex-wrap gap-2">
-                {tech.map((t) => (
-                  <span
-                    key={t}
-                    className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-white/80"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </CardContent>
-            </Card>
-          </div>
-        </Reveal>
-      </section>
-
-      <section className="relative mx-auto max-w-6xl px-4 pb-16">
-        <Reveal delay={0.05}>
-        <div className="flex flex-col gap-2">
-          <h2 className="text-2xl font-semibold tracking-tight">
-            Programación + automatización con IA
-          </h2>
-          <p className="max-w-3xl text-white/70">
-            Aprende a construir software y a usar IA de forma práctica: automatiza tareas,
-            integra asistentes y trabaja con bases de datos con mentalidad de producción.
-          </p>
         </div>
-
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {aiAutomation.map((a) => (
-            <Card key={a.title} className="border-white/10 bg-white/5">
-              <CardHeader>
-                <CardTitle className="text-base">{a.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="text-sm text-white/70">{a.text}</CardContent>
-            </Card>
-          ))}
-        </div>
-        </Reveal>
       </section>
 
-      <section className="relative mx-auto max-w-6xl px-4 pb-16">
-        <Reveal delay={0.08}>
-          <h2 className="text-2xl font-semibold tracking-tight">Rutas de aprendizaje</h2>
-          <p className="mt-2 max-w-3xl text-white/70">
-            Elige una ruta o combina varias. Cada ruta tiene cursos, módulos y proyectos.
-          </p>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {paths.map((p) => (
-              <Card key={p.title} className="border-white/10 bg-white/5">
-                <CardHeader>
-                  <CardTitle className="text-base">{p.title}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2 text-sm text-white/70">
-                  {p.items.map((it) => (
-                    <div key={it} className="flex gap-2">
-                      <div className="mt-2 h-1.5 w-1.5 rounded-full bg-white/50" />
-                      <div>{it}</div>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
+      <section id="software" className="relative w-full px-4 pb-24">
+        <div className="mx-auto max-w-[1400px]">
+          <div className="flex items-end justify-between gap-6 mb-12">
+            <div>
+              <h2 className="text-4xl font-black tracking-tighter text-slate-900 uppercase italic">
+                Nuestras Soluciones
+              </h2>
+              <p className="mt-2 text-slate-500 font-medium">
+                Software diseñado para vender, operar y escalar procesos industriales.
+              </p>
+            </div>
+            <Link href="/contactenos" className="hidden text-xs font-black text-blue-600 uppercase tracking-widest hover:underline sm:block">
+              Ver todas las categorías →
+            </Link>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { title: "Software a medida", desc: "Paneles, módulos, roles y reportes.", icon: "01" },
+              { title: "Automatización", desc: "Bots, scripts, procesos y alertas.", icon: "02" },
+              { title: "Integraciones", desc: "APIs, webhooks, pagos y sistemas.", icon: "03" },
+              { title: "Cursos", desc: "Formación práctica ligada al aula virtual.", icon: "04" },
+            ].map((c) => (
+              <div key={c.title} className="group relative rounded-2xl border border-white bg-white/50 backdrop-blur-sm p-8 transition-all hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-200">
+                <div className="h-12 w-12 rounded-xl bg-blue-600 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
+                  {c.icon}
+                </div>
+                <div className="mt-6 text-lg font-black text-slate-900 uppercase tracking-tight">
+                  {c.title}
+                </div>
+                <div className="mt-2 text-sm text-slate-500 font-medium leading-relaxed">{c.desc}</div>
+                <div className="mt-6 h-1 w-12 bg-blue-600/20 group-hover:w-full transition-all duration-500" />
+              </div>
             ))}
           </div>
-        </Reveal>
-      </section>
 
-      <section className="relative mx-auto max-w-6xl px-4 pb-16">
-        <Reveal delay={0.08}>
-          <h2 className="text-2xl font-semibold tracking-tight">Cómo funciona</h2>
-          <div className="mt-8 grid gap-4 md:grid-cols-4">
-            {howItWorks.map((s) => (
-              <Card key={s.title} className="border-white/10 bg-white/5">
-                <CardHeader>
-                  <CardTitle className="text-base">{s.title}</CardTitle>
-                </CardHeader>
-                <CardContent className="text-sm text-white/70">{s.text}</CardContent>
-              </Card>
-            ))}
+          <div className="mt-16 relative overflow-hidden rounded-3xl border border-white bg-gradient-to-r from-blue-600 to-indigo-700 p-10 shadow-2xl shadow-blue-900/20 sm:flex sm:items-center sm:justify-between sm:gap-8">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
+            <div className="relative z-10 space-y-2">
+              <div className="text-2xl font-black text-white uppercase italic tracking-tight">
+                ¿Listo para escalar tu empresa?
+              </div>
+              <div className="text-blue-50 font-medium max-w-xl">
+                Cuéntanos tu objetivo técnico y te propondremos un plan de implementación optimizado para tu industria.
+              </div>
+            </div>
+            <div className="mt-8 flex gap-3 sm:mt-0 relative z-10">
+              <Button asChild className="h-14 rounded-2xl bg-white text-blue-700 hover:bg-blue-50 px-8 font-black uppercase tracking-widest shadow-xl">
+                <Link href="/contactenos">Contactar Ahora</Link>
+              </Button>
+              <Button asChild variant="outline" className="h-14 rounded-2xl border-white/30 bg-transparent text-white hover:bg-white/10 px-8 font-black uppercase tracking-widest">
+                <Link href="/cursos">Explorar Cursos</Link>
+              </Button>
+            </div>
           </div>
-        </Reveal>
-      </section>
-
-      <section id="faq" className="relative mx-auto max-w-6xl px-4 pb-20">
-        <h2 className="text-2xl font-semibold tracking-tight">FAQ</h2>
-        <div className="mt-8 grid gap-4 md:grid-cols-2">
-          {faqs.map((f) => (
-            <Card key={f.q} className="border-white/10 bg-white/5">
-              <CardHeader>
-                <CardTitle className="text-base">{f.q}</CardTitle>
-              </CardHeader>
-              <CardContent className="text-sm text-white/70">{f.a}</CardContent>
-            </Card>
-          ))}
         </div>
       </section>
     </div>

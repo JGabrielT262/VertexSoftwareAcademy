@@ -23,7 +23,7 @@ export default async function AdminPage() {
 
   if (!hasEnv) {
     return (
-      <div className="mx-auto w-full max-w-6xl px-4 py-12">
+      <div className="w-full px-4 py-12">
         <h1 className="text-3xl font-semibold tracking-tight">Admin</h1>
         <p className="mt-2 text-white/70">
           Configura Supabase para activar el panel administrador.
@@ -50,7 +50,7 @@ export default async function AdminPage() {
 
   if (!isAdmin) {
     return (
-      <div className="mx-auto w-full max-w-6xl px-4 py-12">
+      <div className="w-full px-4 py-12">
         <h1 className="text-3xl font-semibold tracking-tight">Admin</h1>
         <p className="mt-2 text-white/70">Acceso restringido.</p>
         <div className="mt-6">
@@ -69,7 +69,7 @@ export default async function AdminPage() {
     .returns<CourseRow[]>();
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-12">
+    <div className="w-full px-4 py-12">
       <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Admin</h1>

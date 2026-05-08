@@ -57,7 +57,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:py-14">
+    <div className="w-full px-4 py-10 sm:py-14">
       <div className="grid gap-6 lg:grid-cols-2 lg:items-stretch">
         <div className="relative overflow-hidden rounded-xl border border-white/10 bg-white/5 p-8">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(var(--accent-1),0.26),transparent_55%),radial-gradient(ellipse_at_bottom,rgba(var(--accent-2),0.20),transparent_55%)]" />
