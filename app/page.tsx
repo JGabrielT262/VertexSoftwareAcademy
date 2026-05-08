@@ -33,7 +33,7 @@ export default async function Home() {
             <div className="absolute -left-8 -top-8 h-24 w-24 border-2 border-blue-600/10 rounded-full" />
             <div className="absolute -right-8 -bottom-8 h-32 w-32 border-2 border-indigo-600/10 rounded-full" />
 
-            <div className="relative overflow-hidden rounded-2xl border border-white shadow-2xl shadow-blue-500/10 group">
+            <div className="relative overflow-hidden rounded-sm border border-white shadow-2xl shadow-blue-500/10 group">
               <div className="relative aspect-[16/10] w-full overflow-hidden">
                 <Image
                   src={heroImageUrl}
@@ -47,7 +47,7 @@ export default async function Home() {
               </div>
             </div>
 
-            <div className="absolute -right-6 top-12 hidden w-64 border border-white/50 bg-white/80 backdrop-blur-md p-4 rounded-xl shadow-xl sm:block transition-transform hover:-translate-y-1">
+            <div className="absolute -right-6 top-12 hidden w-64 border border-white/50 bg-white/80 backdrop-blur-md p-4 rounded-sm shadow-xl sm:block transition-transform hover:-translate-y-1">
               <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-1">Dual Core</p>
               <p className="text-xs font-bold text-slate-700">Cursos y software industrial en una sola marca.</p>
             </div>
@@ -55,12 +55,12 @@ export default async function Home() {
 
           <div className="relative z-10 order-1 lg:order-2 space-y-8">
             <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100/50 border border-blue-100 rounded-full">
-                <span className="flex h-2 w-2 rounded-full bg-blue-600 animate-pulse" />
-                <span className="text-[10px] font-black text-blue-700 uppercase tracking-[0.2em]">Vertex Software Academy</span>
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100/50 border border-blue-100 rounded-sm">
+                <span className="flex h-2 w-2 rounded-none bg-blue-600 animate-pulse" />
+                <span className="text-[10px] font-black text-blue-700 uppercase tracking-[0.4em]">Vertex Software</span>
               </div>
               <h1 className="text-balance text-6xl font-black tracking-tighter text-slate-900 leading-[0.95] uppercase italic">
-                Crece con <span className="text-blue-600">tecnología</span> profesional
+                Domina el <span className="text-blue-600">futuro</span> con Vertex Software
               </h1>
               <p className="max-w-xl text-lg text-slate-500 leading-relaxed font-medium">
                 Software industrial a medida, automatización e integraciones. Formamos a tu equipo técnico con una metodología orientada a producción.
@@ -70,9 +70,9 @@ export default async function Home() {
             <div className="flex w-full max-w-xl gap-3">
               <Input
                 placeholder="¿Qué necesitas construir?"
-                className="h-14 rounded-2xl border-white bg-white shadow-xl shadow-blue-900/5 text-slate-900 placeholder:text-slate-400 px-6"
+                className="h-14 rounded-sm border-white bg-white shadow-xl shadow-blue-900/5 text-slate-900 placeholder:text-slate-400 px-6"
               />
-              <Button className="h-14 rounded-2xl bg-blue-600 px-8 text-white hover:bg-blue-700 font-black uppercase tracking-widest shadow-xl shadow-blue-500/30 transition-all hover:scale-105">
+              <Button className="h-14 rounded-sm bg-blue-600 px-8 text-white hover:bg-blue-700 font-black uppercase tracking-widest shadow-xl shadow-blue-500/30 transition-all hover:scale-105">
                 Cotizar
               </Button>
             </div>
@@ -83,7 +83,7 @@ export default async function Home() {
                 <Link
                   key={p}
                   href="/contactenos"
-                  className="rounded-full border border-white bg-white/50 px-4 py-1.5 text-slate-700 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all shadow-sm"
+                  className="rounded-sm border border-white bg-white/50 px-4 py-1.5 text-slate-700 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all shadow-sm"
                 >
                   {p}
                 </Link>

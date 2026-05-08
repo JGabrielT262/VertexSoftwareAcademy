@@ -20,24 +20,33 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://vertexsoftware.online"),
-  title: "Vertex Software",
+  title: {
+    default: "Vertex Software - Formación Técnica e Industrial",
+    template: "%s | Vertex Software",
+  },
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
   description:
-    "Software a medida y formación técnica: sistemas, automatización, integraciones y cursos vinculados al aula virtual.",
+    "Especialistas en software a medida, automatización industrial y formación técnica de alto nivel. Soluciones integrales para ingenieros y empresas.",
   keywords: [
-    "vertex software",
-    "software a medida",
-    "automatización",
-    "integraciones",
-    "cursos de programación",
-    "aula virtual",
+    "Vertex Software",
+    "Vertex Software Academy",
+    "Vertex Industrial",
+    "Software a medida",
+    "Automatización Industrial",
+    "Sistemas SCADA",
+    "Formación para Ingenieros",
+    "Ingeniería de Software",
   ],
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "Vertex Software",
+    title: "Vertex Software - Formación Técnica e Industrial",
     description:
-      "Software a medida y formación técnica: sistemas, automatización, integraciones y cursos vinculados al aula virtual.",
+      "Especialistas en software a medida, automatización industrial y formación técnica de alto nivel.",
     url: "https://vertexsoftware.online",
     siteName: "Vertex Software",
     images: [
@@ -52,9 +61,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vertex Software",
+    title: "Vertex Software - Formación Técnica e Industrial",
     description:
-      "Software a medida y formación técnica: sistemas, automatización, integraciones y cursos.",
+      "Especialistas en software a medida, automatización industrial y formación técnica de alto nivel.",
     images: ["/vertex-logo.png"],
   },
 };
