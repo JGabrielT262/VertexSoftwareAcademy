@@ -66,6 +66,7 @@ export const metadata: Metadata = {
       "Vertex Software desarrolla soluciones tecnológicas empresariales: ERP, sistemas de almacén, automatización industrial, desarrollo web y plataformas a medida.",
     images: ["/vertex-logo.png"],
   },
+  applicationName: "Vertex Software",
 };
 
 function getPageKeyFromPathname(pathname: string) {
@@ -92,14 +93,23 @@ export default async function RootLayout({
   const pathname = hdrs.get("x-vsa-pathname") ?? "/";
   const pageKey = getPageKeyFromPathname(pathname);
   const isAula = pageKey === "aula";
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: "Vertex Software",
-    url: "https://vertexsoftware.online",
-    logo: "https://vertexsoftware.online/vertex-logo.png",
-    description: "Vertex Software desarrolla soluciones tecnológicas empresariales: ERP, sistemas de almacén, automatización industrial, desarrollo web y plataformas a medida.",
-  };
+  
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Vertex Software",
+      "url": "https://vertexsoftware.online",
+      "logo": "https://vertexsoftware.online/vertex-logo.png",
+      "description": "Vertex Software desarrolla soluciones tecnológicas empresariales: ERP, sistemas de almacén, automatización industrial, desarrollo web y plataformas a medida."
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Vertex Software",
+      "url": "https://vertexsoftware.online"
+    }
+  ];
 
   return (
     <html
