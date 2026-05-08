@@ -21,32 +21,32 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://vertexsoftware.online"),
   title: {
-    default: "Vertex Software - Formación Técnica e Industrial",
+    default: "Vertex Software | ERP, Sistemas Empresariales y Soluciones Tecnológicas",
     template: "%s | Vertex Software",
+  },
+  description:
+    "Vertex Software desarrolla soluciones tecnológicas empresariales: ERP, sistemas de almacén, automatización industrial, desarrollo web y plataformas a medida.",
+  keywords: [
+    "Vertex Software",
+    "ERP",
+    "Sistemas Empresariales",
+    "Automatización Industrial",
+    "Sistemas de Almacén",
+    "Desarrollo Web",
+    "Plataformas a medida",
+    "Software Industrial",
+  ],
+  alternates: {
+    canonical: "/",
   },
   icons: {
     icon: "/favicon.ico",
     apple: "/favicon.ico",
   },
-  description:
-    "Especialistas en software a medida, automatización industrial y formación técnica de alto nivel. Soluciones integrales para ingenieros y empresas.",
-  keywords: [
-    "Vertex Software",
-    "Vertex Software Academy",
-    "Vertex Industrial",
-    "Software a medida",
-    "Automatización Industrial",
-    "Sistemas SCADA",
-    "Formación para Ingenieros",
-    "Ingeniería de Software",
-  ],
-  alternates: {
-    canonical: "/",
-  },
   openGraph: {
-    title: "Vertex Software - Formación Técnica e Industrial",
+    title: "Vertex Software | ERP, Sistemas Empresariales y Soluciones Tecnológicas",
     description:
-      "Especialistas en software a medida, automatización industrial y formación técnica de alto nivel.",
+      "Vertex Software desarrolla soluciones tecnológicas empresariales: ERP, sistemas de almacén, automatización industrial, desarrollo web y plataformas a medida.",
     url: "https://vertexsoftware.online",
     siteName: "Vertex Software",
     images: [
@@ -61,9 +61,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vertex Software - Formación Técnica e Industrial",
+    title: "Vertex Software | ERP, Sistemas Empresariales y Soluciones Tecnológicas",
     description:
-      "Especialistas en software a medida, automatización industrial y formación técnica de alto nivel.",
+      "Vertex Software desarrolla soluciones tecnológicas empresariales: ERP, sistemas de almacén, automatización industrial, desarrollo web y plataformas a medida.",
     images: ["/vertex-logo.png"],
   },
 };
@@ -92,21 +92,14 @@ export default async function RootLayout({
   const pathname = hdrs.get("x-vsa-pathname") ?? "/";
   const pageKey = getPageKeyFromPathname(pathname);
   const isAula = pageKey === "aula";
-  const structuredData = [
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      name: "Vertex Software",
-      url: "https://vertexsoftware.online",
-      logo: "https://vertexsoftware.online/vertex-logo.png",
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      name: "Vertex Software",
-      url: "https://vertexsoftware.online",
-    },
-  ];
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Vertex Software",
+    url: "https://vertexsoftware.online",
+    logo: "https://vertexsoftware.online/vertex-logo.png",
+    description: "Vertex Software desarrolla soluciones tecnológicas empresariales: ERP, sistemas de almacén, automatización industrial, desarrollo web y plataformas a medida.",
+  };
 
   return (
     <html
