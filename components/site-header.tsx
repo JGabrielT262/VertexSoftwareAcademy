@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { ContactDialog } from "@/components/contact-dialog";
+import { Mail } from "lucide-react";
 import { UserMenu } from "@/components/user-menu";
 import { Button } from "@/components/ui/button";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -87,11 +88,10 @@ export async function SiteHeader() {
                   Aula virtual
                 </Link>
               </Button>
-              <ContactDialog
-                contactEmail={contactEmail}
-                contactPhone={contactPhone}
-                triggerClassName="border border-slate-200 bg-white text-slate-900 hover:bg-slate-50"
-              />
+              <Link href="/contactenos" className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors">
+                <Mail className="size-4" />
+                <span>Contáctenos</span>
+              </Link>
               <UserMenu email={user.email ?? null} name={userName} />
             </>
           ) : (
@@ -105,11 +105,10 @@ export async function SiteHeader() {
                   Aula virtual
                 </Link>
               </Button>
-              <ContactDialog
-                contactEmail={contactEmail}
-                contactPhone={contactPhone}
-                triggerClassName="border border-slate-200 bg-white text-slate-900 hover:bg-slate-50"
-              />
+              <Link href="/contactenos" className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors">
+                <Mail className="size-4" />
+                <span>Contáctenos</span>
+              </Link>
               <Button
                 asChild
                 className="bg-slate-900 text-white hover:bg-slate-800"

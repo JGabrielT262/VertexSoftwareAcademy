@@ -41,6 +41,7 @@ export function ProfileMenu({ userData }: ProfileMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger 
+        nativeButton={false}
         render={
           <Avatar className="h-8 w-8 ring-2 ring-slate-100 ring-offset-2 transition-transform hover:scale-105 cursor-pointer">
             <AvatarFallback className="bg-purple-600 text-[10px] text-white font-black">

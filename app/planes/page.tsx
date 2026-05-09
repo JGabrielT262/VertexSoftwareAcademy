@@ -1,8 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
+import { Metadata } from "next";
 
 import { Button } from "@/components/ui/button";
 import { getSiteContent } from "@/lib/site-content";
+
+export const metadata: Metadata = {
+  title: "Planes de Suscripción",
+  description: "Elige el plan que mejor se adapte a tu formación técnica. Acceso total al ecosistema de aprendizaje Vertex, laboratorios y mentorías.",
+};
 
 export default async function PlanesPage({
   searchParams,

@@ -100,18 +100,18 @@ export default function AulaLoginPage() {
       
       <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center relative z-10">
         <div className="space-y-6 lg:pr-10 text-center lg:text-left order-2 lg:order-1">
-          <div className="space-y-0">
+          <div className="space-y-4">
             <Image
               src="/vertex-logo.png"
               alt="Vertex Logo"
               width={400}
               height={140}
-              className="mx-auto w-[280px] max-w-full object-contain lg:mx-0 lg:w-[320px] -ml-2"
+              className="mx-auto w-[280px] max-w-full object-contain lg:mx-0 lg:w-[320px]"
               priority
             />
             
-            <div className="space-y-0">
-              <h1 className="text-4xl lg:text-5xl font-black tracking-tighter text-slate-900 uppercase leading-none -mt-4">
+            <div className="space-y-2">
+              <h1 className="text-4xl lg:text-5xl font-black tracking-tighter text-slate-900 uppercase leading-tight">
                 Vertex Software Academy
               </h1>
               <p className="text-blue-600 font-black text-[10px] lg:text-xs uppercase tracking-[0.4em] mt-2">

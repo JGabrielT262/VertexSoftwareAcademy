@@ -1,7 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { getSiteContent } from "@/lib/site-content";
+
+export const metadata: Metadata = {
+  title: "Software y Soluciones",
+  description: "Desarrollo de software a medida, ERP, automatización industrial e integraciones de alto rendimiento.",
+};
 import { 
   Warehouse, 
   Truck, 
