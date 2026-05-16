@@ -78,12 +78,14 @@ export default async function AulaVirtualPage({
       .eq("id", user.id)
       .maybeSingle();
 
+    const isAdminEmail = user.email === "jgabrieltovarc@gmail.com";
+
     userData = { 
       id: user.id,
       email: user.email, 
       name: profile?.full_name || (user.user_metadata?.full_name as string) || user.email?.split('@')[0],
-      role: profile?.role || "student",
-      plan: profile?.plan || "free",
+      role: isAdminEmail ? "admin" : (profile?.role || "student"),
+      plan: isAdminEmail ? "pro" : (profile?.plan || "free"),
       plan_expires_at: profile?.plan_expires_at
     };
   }
