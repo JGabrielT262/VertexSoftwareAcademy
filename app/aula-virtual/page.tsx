@@ -78,7 +78,10 @@ export default async function AulaVirtualPage({
       .eq("id", user.id)
       .maybeSingle();
 
-    const isAdminEmail = user.email === "jgabrieltovarc@gmail.com";
+    console.log("DEBUG - User Email:", user.email);
+    const isAdminEmail = 
+      user.email?.toLowerCase() === "jgabrieltovarc@gmail.com" || 
+      user.email?.toLowerCase() === "gaelgdx@gmail.com";
 
     userData = { 
       id: user.id,
