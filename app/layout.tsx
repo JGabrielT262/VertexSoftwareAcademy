@@ -3,6 +3,8 @@ import { Geist_Mono, Inter } from "next/font/google";
 import { headers } from "next/headers";
 import "./globals.css";
 import { Toaster } from "sonner";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -136,6 +138,8 @@ export default async function RootLayout({
         </main>
         {isAula ? null : <SiteFooter />}
         <Toaster richColors />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

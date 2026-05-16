@@ -50,33 +50,89 @@ export default async function AulaVirtualPage({
     (!!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
       !!process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
 
-  let userData: { email?: string | null; name?: string | null } = { email: "usuario@ejemplo.com", name: "Usuario" };
+  let userData: { 
+    id?: string;
+    email?: string | null; 
+    name?: string | null; 
+    role?: string | null;
+    plan?: string | null;
+    plan_expires_at?: string | null;
+  } = { 
+    email: "usuario@ejemplo.com", 
+    name: "Usuario", 
+    role: "student", 
+    plan: "free" 
+  };
 
   if (hasEnv) {
     const supabase = await createSupabaseServerClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();
+    
     if (!user) redirect("/aula-virtual/login?next=/aula-virtual");
+    
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role, full_name, plan, plan_expires_at")
+      .eq("id", user.id)
+      .maybeSingle();
+
     userData = { 
+      id: user.id,
       email: user.email, 
-      name: (user.user_metadata?.full_name as string) || user.email?.split('@')[0] 
+      name: profile?.full_name || (user.user_metadata?.full_name as string) || user.email?.split('@')[0],
+      role: profile?.role || "student",
+      plan: profile?.plan || "free",
+      plan_expires_at: profile?.plan_expires_at
     };
   }
 
   const sp = await Promise.resolve(searchParams);
   const activeTab = typeof sp?.tab === "string" ? sp.tab : "inicio";
 
-  const tabs = [
-    { id: "inicio", label: "Inicio", icon: Home },
-    { id: "clases", label: "Clases grabadas", icon: Video },
-    { id: "progreso", label: "Progreso", icon: TrendingUp },
-    { id: "cursos", label: "Cursos", icon: GraduationCap },
-    { id: "certificados", label: "Mis Certificados", icon: Award },
-    { id: "mochila", label: "Mochila", icon: Backpack },
-    { id: "recursos", label: "Recursos", icon: Library },
-    { id: "guia", label: "Guía", icon: Compass },
+  const allTabs = [
+    { id: "inicio", label: "Inicio", icon: Home, roles: ["admin", "professor", "student"] },
+    { id: "clases", label: "Clases grabadas", icon: Video, roles: ["admin", "professor", "student"] },
+    { id: "progreso", label: "Progreso", icon: TrendingUp, roles: ["admin", "student"] },
+    { id: "cursos", label: "Cursos", icon: GraduationCap, roles: ["admin", "student"] },
+    { id: "admin", label: "Panel Admin", icon: ShieldCheck, roles: ["admin"] },
+    { id: "profesor", label: "Panel Profesor", icon: GraduationCap, roles: ["professor"] },
+    { id: "certificados", label: "Mis Certificados", icon: Award, roles: ["admin", "student"] },
+    { id: "mochila", label: "Mochila", icon: Backpack, roles: ["admin", "student"] },
+    { id: "recursos", label: "Recursos", icon: Library, roles: ["admin", "student"] },
+    { id: "guia", label: "Guía", icon: Compass, roles: ["admin", "student"] },
+    { id: "mensajes", label: "Mensajes Contacto", icon: MessageCircle, roles: ["admin"] },
+    { id: "historial", label: "Historial Clases", icon: Clock, roles: ["admin"] },
   ];
+
+  const tabs = allTabs.filter(tab => tab.roles.includes(userData.role || "student"));
+
+  let contactMessages: any[] = [];
+  let allProfiles: any[] = [];
+  let allEnrollments: any[] = [];
+
+  if (hasEnv && userData.role === "admin") {
+    const supabase = await createSupabaseServerClient();
+    
+    const { data: messages } = await supabase
+      .from("contact_messages")
+      .select("*")
+      .order("created_at", { ascending: false });
+    contactMessages = messages || [];
+
+    const { data: profiles } = await supabase
+      .from("profiles")
+      .select("*")
+      .order("created_at", { ascending: false });
+    allProfiles = profiles || [];
+
+    const { data: enrollments } = await supabase
+      .from("enrollments")
+      .select("*, courses(title), profiles(full_name)")
+      .order("created_at", { ascending: false });
+    allEnrollments = enrollments || [];
+  }
 
   return (
     <div className="min-h-screen bg-[#edf2f7] text-slate-900 font-sans selection:bg-blue-200 selection:text-blue-900">
@@ -144,13 +200,29 @@ export default async function AulaVirtualPage({
                   </Avatar>
                   <div className="space-y-1">
                     <h3 className="font-black text-blue-900 leading-tight tracking-tight">{userData.name}</h3>
-                    <p className="text-xs font-bold text-blue-600 uppercase tracking-wider">Desarrollador en Formación</p>
+                    <p className="text-xs font-bold text-blue-600 uppercase tracking-wider">
+                      {userData.role === "admin" ? "Administrador General" : userData.role === "professor" ? "Instructor Senior" : "Desarrollador en Formación"}
+                    </p>
+                    <div className="mt-2 flex items-center gap-2">
+                      <span className={`px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest ${
+                        userData.plan === "pro" ? "bg-blue-600 text-white border border-blue-700 shadow-sm" :
+                        userData.plan === "basico" ? "bg-indigo-100 text-indigo-700 border border-indigo-200" :
+                        "bg-slate-100 text-slate-700 border border-slate-200"
+                      }`}>
+                        Plan {userData.plan}
+                      </span>
+                    </div>
                   </div>
-                  <div className="mt-4 border-t border-blue-50 pt-4">
+                  <div className="mt-4 border-t border-blue-50 pt-4 space-y-2">
                     <Link href="#" prefetch={false} className="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-blue-600 transition-colors">
                       <User className="h-3 w-3" />
-                      Perfil de Programador
+                      Perfil de {userData.role}
                     </Link>
+                    {userData.plan_expires_at && (
+                      <p className="text-[9px] font-bold text-slate-400 uppercase tracking-tight">
+                        Vence: {new Date(userData.plan_expires_at).toLocaleDateString()}
+                      </p>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -211,7 +283,11 @@ export default async function AulaVirtualPage({
                       <h2 className="text-2xl font-black text-blue-900 tracking-tighter uppercase italic">
                         ¡Hola, {userData.name?.split(' ')[0]}!
                       </h2>
-                      <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Status: 3 Lecciones Pendientes • Ingeniería v4.2</p>
+                      <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">
+                        {userData.role === "admin" 
+                          ? "Panel de Control Maestro • Acceso Total" 
+                          : `Status: 3 Lecciones Pendientes • Plan ${userData.plan?.toUpperCase()} v4.2`}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -395,6 +471,134 @@ export default async function AulaVirtualPage({
                       </div>
                     </Card>
                   ))}
+                </div>
+              </div>
+            )}
+
+            {activeTab === "mensajes" && (
+              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="flex items-center justify-between border-b border-blue-200 pb-4">
+                  <h2 className="text-2xl font-black text-blue-900 uppercase tracking-tighter italic">Bandeja de Contacto</h2>
+                </div>
+                <div className="grid gap-4">
+                  {contactMessages.length > 0 ? (
+                    contactMessages.map((msg) => (
+                      <Card key={msg.id} className="border border-blue-100 shadow-sm bg-white overflow-hidden">
+                        <CardContent className="p-6">
+                          <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-3">
+                                <h3 className="font-black text-blue-900 uppercase tracking-tight">{msg.full_name}</h3>
+                                <span className="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 font-black uppercase tracking-widest">DNI: {msg.dni}</span>
+                              </div>
+                              <p className="text-xs font-bold text-slate-500 uppercase tracking-tight">{msg.email} • {msg.phone}</p>
+                              <div className="mt-4 p-4 bg-slate-50 border border-slate-100 rounded-sm italic text-sm text-slate-700 leading-relaxed">
+                                "{msg.message}"
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                {new Date(msg.created_at).toLocaleString()}
+                              </p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))
+                  ) : (
+                    <div className="p-12 text-center text-slate-400 font-bold uppercase tracking-widest text-xs">
+                      No hay mensajes nuevos en la base de datos.
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {activeTab === "admin" && (
+              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="flex items-center justify-between border-b border-blue-200 pb-4">
+                  <h2 className="text-2xl font-black text-blue-900 uppercase tracking-tighter italic">Gestión de Usuarios y Planes</h2>
+                </div>
+                
+                <div className="bg-white border border-blue-100 rounded-sm overflow-hidden shadow-sm">
+                  <table className="w-full text-left border-collapse">
+                    <thead className="bg-blue-50/50 border-b border-blue-100">
+                      <tr>
+                        <th className="px-6 py-4 text-[10px] font-black text-blue-900 uppercase tracking-widest">Usuario</th>
+                        <th className="px-6 py-4 text-[10px] font-black text-blue-900 uppercase tracking-widest">Rol</th>
+                        <th className="px-6 py-4 text-[10px] font-black text-blue-900 uppercase tracking-widest">Plan Actual</th>
+                        <th className="px-6 py-4 text-[10px] font-black text-blue-900 uppercase tracking-widest">Vencimiento</th>
+                        <th className="px-6 py-4 text-[10px] font-black text-blue-900 uppercase tracking-widest">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {allProfiles.map((profile) => (
+                        <tr key={profile.id} className="hover:bg-slate-50/50 transition-colors">
+                          <td className="px-6 py-4">
+                            <p className="text-sm font-black text-slate-900 tracking-tight">{profile.full_name || "Sin nombre"}</p>
+                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">{profile.email || "—"}</p>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className={`px-2 py-1 text-[9px] font-black uppercase tracking-widest rounded-none ${
+                              profile.role === "admin" ? "bg-slate-900 text-white" : "bg-blue-100 text-blue-700"
+                            }`}>
+                              {profile.role}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="text-xs font-bold text-slate-700 uppercase">{profile.plan || "free"}</span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="text-xs font-bold text-slate-400 uppercase tracking-tighter">
+                              {profile.plan_expires_at ? new Date(profile.plan_expires_at).toLocaleDateString() : "—"}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <Button variant="outline" size="sm" className="h-8 text-[9px] font-black uppercase tracking-widest border-slate-200 hover:border-blue-600 hover:text-blue-600">
+                              Gestionar
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {activeTab === "historial" && (
+              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="flex items-center justify-between border-b border-blue-200 pb-4">
+                  <h2 className="text-2xl font-black text-blue-900 uppercase tracking-tighter italic">Historial de Inscripciones y Actividad</h2>
+                </div>
+                
+                <div className="grid gap-4">
+                  {allEnrollments.length > 0 ? (
+                    allEnrollments.map((enr) => (
+                      <Card key={enr.id} className="border border-slate-200 bg-white overflow-hidden hover:border-blue-600 transition-all group">
+                        <CardContent className="p-4 flex items-center justify-between">
+                          <div className="flex items-center gap-4">
+                            <div className="size-10 bg-blue-50 text-blue-600 rounded-sm flex items-center justify-center font-black italic">
+                              {enr.courses?.title?.[0] || "C"}
+                            </div>
+                            <div>
+                              <p className="text-sm font-black text-slate-900 uppercase tracking-tight">{enr.courses?.title || "Curso Desconocido"}</p>
+                              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
+                                Alumno: <span className="text-blue-600">{enr.profiles?.full_name || "Usuario"}</span> • Inscrito el {new Date(enr.created_at).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                             <span className="text-[9px] font-black bg-slate-100 text-slate-500 px-2 py-1 uppercase tracking-widest">Activo</span>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))
+                  ) : (
+                    <div className="p-12 text-center text-slate-400 font-bold uppercase tracking-widest text-xs">
+                      No hay registros de inscripciones aún.
+                    </div>
+                  )}
                 </div>
               </div>
             )}

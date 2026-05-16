@@ -40,6 +40,7 @@ export function ContactDialog({ contactEmail, contactPhone, triggerClassName }: 
   const [email, setEmail] = useState("");
   const [dni, setDni] = useState("");
   const [phone, setPhone] = useState("");
+  const [countryCode, setCountryCode] = useState("+51");
   const [message, setMessage] = useState("");
 
   const canSubmit = fullName.trim() && email.trim() && message.trim();
@@ -71,7 +72,7 @@ export function ContactDialog({ contactEmail, contactPhone, triggerClassName }: 
         full_name: fullName.trim(),
         email: email.trim(),
         dni: dni.trim() || null,
-        phone: phone.trim() || null,
+        phone: `${countryCode} ${phone.trim()}` || null,
         message: message.trim(),
       });
 
@@ -127,7 +128,7 @@ export function ContactDialog({ contactEmail, contactPhone, triggerClassName }: 
                   <Input
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Tu nombre completo"
+                    placeholder="Ej. Ana García"
                     className="rounded-md border-slate-200 bg-white"
                   />
                 </div>
@@ -156,13 +157,27 @@ export function ContactDialog({ contactEmail, contactPhone, triggerClassName }: 
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs text-slate-600">Celular (opcional)</label>
-                  <Input
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="+51 9xx xxx xxx"
-                    inputMode="tel"
-                    className="rounded-md border-slate-200 bg-white"
-                  />
+                  <div className="flex gap-2">
+                    <select
+                      value={countryCode}
+                      onChange={(e) => setCountryCode(e.target.value)}
+                      className="h-10 w-20 rounded-md border border-slate-200 bg-white focus:border-blue-500 transition-all font-bold text-slate-900 text-xs px-2 cursor-pointer"
+                    >
+                      <option value="+51">🇵🇪 +51</option>
+                      <option value="+1">🇺🇸 +1</option>
+                      <option value="+57">🇨🇴 +57</option>
+                      <option value="+52">🇲🇽 +52</option>
+                      <option value="+54">🇦🇷 +54</option>
+                      <option value="+56">🇨🇱 +56</option>
+                    </select>
+                    <Input
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="999 000 000"
+                      inputMode="tel"
+                      className="rounded-md border-slate-200 bg-white flex-1"
+                    />
+                  </div>
                 </div>
               </div>
 

@@ -15,6 +15,7 @@ export default function ContactenosPage() {
   const [email, setEmail] = useState("");
   const [dni, setDni] = useState("");
   const [phone, setPhone] = useState("");
+  const [countryCode, setCountryCode] = useState("+51");
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -42,7 +43,7 @@ export default function ContactenosPage() {
         full_name: fullName.trim(),
         email: email.trim(),
         dni: dni.trim() || null,
-        phone: phone.trim() || null,
+        phone: `${countryCode} ${phone.trim()}` || null,
         message: message.trim(),
       });
 
@@ -94,7 +95,7 @@ export default function ContactenosPage() {
                 </div>
                 <div>
                   <h3 className="text-xs font-black text-slate-900 uppercase tracking-widest">Contacto Directo</h3>
-                  <p className="text-sm font-bold text-blue-600 mt-1">contacto@vertexsoftware.online</p>
+                  <p className="text-sm font-bold text-blue-600 mt-1">jgabrieltovarc@gmail.com</p>
                 </div>
               </div>
 
@@ -104,7 +105,7 @@ export default function ContactenosPage() {
                 </div>
                 <div>
                   <h3 className="text-xs font-black text-slate-900 uppercase tracking-widest">Atención Telefónica</h3>
-                  <p className="text-sm font-bold text-blue-600 mt-1">+51 900 000 000</p>
+                  <p className="text-sm font-bold text-blue-600 mt-1">+51 910 999 206</p>
                 </div>
               </div>
 
@@ -146,7 +147,7 @@ export default function ContactenosPage() {
                     <Input
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      placeholder="Ej. Jesus Gabriel Tovar"
+                      placeholder="Ej. Carlos Rodríguez"
                       className="h-12 rounded-sm border-slate-200 bg-white focus:border-blue-500 transition-all font-bold text-slate-900"
                     />
                   </div>
@@ -174,12 +175,26 @@ export default function ContactenosPage() {
                     </div>
                     <div className="space-y-2">
                       <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] px-1">Teléfono</label>
-                      <Input
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        placeholder="+51 ..."
-                        className="h-12 rounded-sm border-slate-200 bg-white focus:border-blue-500 transition-all font-bold text-slate-900"
-                      />
+                      <div className="flex gap-2">
+                        <select
+                          value={countryCode}
+                          onChange={(e) => setCountryCode(e.target.value)}
+                          className="h-12 w-20 rounded-sm border border-slate-200 bg-white focus:border-blue-500 transition-all font-bold text-slate-900 text-xs px-2 cursor-pointer hover:bg-slate-50"
+                        >
+                          <option value="+51">🇵🇪 +51</option>
+                          <option value="+1">🇺🇸 +1</option>
+                          <option value="+57">🇨🇴 +57</option>
+                          <option value="+52">🇲🇽 +52</option>
+                          <option value="+54">🇦🇷 +54</option>
+                          <option value="+56">🇨🇱 +56</option>
+                        </select>
+                        <Input
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          placeholder="999 000 000"
+                          className="h-12 flex-1 rounded-sm border-slate-200 bg-white focus:border-blue-500 transition-all font-bold text-slate-900"
+                        />
+                      </div>
                     </div>
                   </div>
 

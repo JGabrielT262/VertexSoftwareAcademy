@@ -40,8 +40,8 @@ export default async function PlanesPage({
         href: "/aula-virtual?plan=gratuito",
       },
     },
-    medio: {
-      name: "Medio (Suscripción mensual)",
+    basico: {
+      name: "Básico (Suscripción mensual)",
       price: "S/ 59 / mes",
       subtitle:
         "Acceso a cursos en vivo y grabaciones según cronograma + soporte asíncrono.",
@@ -52,7 +52,7 @@ export default async function PlanesPage({
         "Chat de ayuda (asíncrono)",
         "Aula virtual (según plan)",
       ],
-      cta: { label: isOnboarding ? "Elegir Medio" : "Suscribirme", href: "/aula-virtual?checkout=plan&plan=medio" },
+      cta: { label: isOnboarding ? "Elegir Básico" : "Suscribirme", href: "/aula-virtual?checkout=plan&plan=basico" },
     },
     pro: {
       name: "Pro (Suscripción mensual)",
@@ -129,7 +129,7 @@ export default async function PlanesPage({
           <div className="grid gap-6 md:grid-cols-3">
             {Object.entries(plans).map(([key, p]) => {
               const isPro = key === "pro";
-              const isMedio = key === "medio";
+              const isBasico = key === "basico";
               
               return (
                 <div

@@ -143,32 +143,33 @@ export default async function SoftwarePage() {
    
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {software.map((s) => (
-                <div
-                  key={s.title}
-                  className="group relative bg-white border border-slate-100 rounded-sm p-6 transition-all duration-300 hover:border-blue-500 hover:shadow-2xl hover:-translate-y-1"
-                >
-                  <div className="flex items-start justify-between mb-6">
-                    <div className="h-12 w-12 border border-slate-100 bg-slate-50 flex items-center justify-center group-hover:bg-blue-600 group-hover:border-blue-600 transition-all duration-300">
-                      <s.icon className="h-5 w-5 text-slate-400 group-hover:text-white transition-colors" />
+                <Link key={s.title} href="/contactenos" className="group">
+                  <div
+                    className="relative bg-white border border-slate-100 rounded-sm p-6 transition-all duration-300 group-hover:border-blue-500 group-hover:shadow-2xl group-hover:-translate-y-1 h-full"
+                  >
+                    <div className="flex items-start justify-between mb-6">
+                      <div className="h-12 w-12 border border-slate-100 bg-slate-50 flex items-center justify-center group-hover:bg-blue-600 group-hover:border-blue-600 transition-all duration-300">
+                        <s.icon className="h-5 w-5 text-slate-400 group-hover:text-white transition-colors" />
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-slate-200 group-hover:text-blue-500 transition-colors" />
                     </div>
-                    <ChevronRight className="h-4 w-4 text-slate-200 group-hover:text-blue-500 transition-colors" />
+                    
+                    <h4 className="text-sm font-black text-slate-900 uppercase tracking-tight group-hover:text-blue-600 transition-colors">
+                      {s.title}
+                    </h4>
+                    <p className="mt-3 text-[11px] font-medium text-slate-500 leading-relaxed min-h-[50px]">
+                      {s.desc}
+                    </p>
+                    
+                    <div className="mt-6 flex flex-wrap gap-1.5">
+                      {s.tags.map((t) => (
+                        <span key={t} className="px-2 py-0.5 border border-slate-100 bg-slate-50 text-[7px] font-black uppercase text-slate-400 group-hover:border-blue-100 group-hover:text-blue-600 transition-colors">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                  
-                  <h4 className="text-sm font-black text-slate-900 uppercase tracking-tight group-hover:text-blue-600 transition-colors">
-                    {s.title}
-                  </h4>
-                  <p className="mt-3 text-[11px] font-medium text-slate-500 leading-relaxed min-h-[50px]">
-                    {s.desc}
-                  </p>
-                  
-                  <div className="mt-6 flex flex-wrap gap-1.5">
-                    {s.tags.map((t) => (
-                      <span key={t} className="px-2 py-0.5 border border-slate-100 bg-slate-50 text-[7px] font-black uppercase text-slate-400 group-hover:border-blue-100 group-hover:text-blue-600 transition-colors">
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+                </Link>
               ))}
             </div>
   

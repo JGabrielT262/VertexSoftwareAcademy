@@ -1,9 +1,18 @@
 import Link from "next/link";
-
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { BadgeCheck } from "lucide-react";
+import { 
+  BadgeCheck, 
+  ChevronRight, 
+  PlayCircle, 
+  Lock, 
+  Clock, 
+  BarChart, 
+  BookOpen,
+  ArrowLeft
+} from "lucide-react";
 
 type Course = {
   id: string;
@@ -12,6 +21,7 @@ type Course = {
   description: string | null;
   thumbnail: string | null;
   price: number | null;
+  priceUSD?: number | null;
   level: string | null;
   duration: string | null;
 };
@@ -83,14 +93,14 @@ export default async function CourseDetailPage({
   if (!course) {
     course = {
       id: "demo-course",
-      title: "Curso demo",
+      title: "Curso Demo: Ingeniería de Software",
       slug,
       description:
-        "Configura Supabase para ver el detalle real del curso, módulos y lecciones.",
-      thumbnail: null,
-      price: 0,
-      level: "—",
-      duration: "—",
+        "Domina los patrones de diseño y arquitectura para sistemas escalables de alta disponibilidad.",
+      thumbnail: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1200&q=80",
+      price: 249,
+      level: "Avanzado",
+      duration: "12 Semanas",
     };
   }
 
@@ -124,137 +134,226 @@ export default async function CourseDetailPage({
     lessons: lessons.filter((l) => l.module_id === m.id),
   }));
 
+  const enrollUrl = `/aula-virtual?checkout=course&courseSlug=${encodeURIComponent(slug)}`;
+
   return (
-    <div className="w-full px-4 py-12">
-      <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-        <div className="max-w-2xl">
-          <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
-            {course.title ?? "Curso"}
-          </h1>
-          <p className="mt-3 text-slate-600">{course.description ?? "—"}</p>
-          <div className="mt-4 flex flex-wrap gap-2 text-xs">
-            <span className="inline-flex items-center gap-1 border border-slate-200 bg-white px-2 py-1 text-slate-900">
-              <BadgeCheck className="size-3.5" />
-              Certificado
-            </span>
-            {course.level ? (
-              <span className="border border-slate-200 bg-white px-2 py-1 text-slate-700">
-                {course.level}
-              </span>
-            ) : null}
-            {course.duration ? (
-              <span className="border border-slate-200 bg-white px-2 py-1 text-slate-700">
-                {course.duration}
-              </span>
-            ) : null}
-            {typeof course.price === "number" ? (
-              <span className="border border-slate-200 bg-white px-2 py-1 text-slate-700">
-                S/ {course.price}
-              </span>
-            ) : null}
+    <div className="min-h-screen bg-[#f8fafc]">
+      {/* Hero Section */}
+      <section className="relative w-full overflow-hidden bg-slate-900 pt-16 pb-24 text-white">
+        <div className="absolute inset-0 opacity-20">
+          <Image
+            src={course.thumbnail || "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80"}
+            alt="Background"
+            fill
+            className="object-cover blur-sm"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent" />
+        </div>
+
+        <div className="relative z-10 mx-auto max-w-[1200px] px-4">
+          <Link href="/cursos" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-400 hover:text-white transition-colors mb-8">
+            <ArrowLeft className="size-3" />
+            Volver al Catálogo
+          </Link>
+
+          <div className="grid gap-12 lg:grid-cols-[1fr_380px] lg:items-center">
+            <div className="space-y-6">
+              <div className="flex flex-wrap gap-3">
+                <span className="px-3 py-1 bg-blue-600 text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-blue-500/20">
+                  {course.level}
+                </span>
+                <span className="px-3 py-1 bg-white/10 backdrop-blur-md text-[10px] font-black uppercase tracking-[0.2em]">
+                  Certificación Oficial
+                </span>
+              </div>
+              
+              <h1 className="text-4xl lg:text-5xl font-black tracking-tighter uppercase italic leading-[0.95]">
+                {course.title}
+              </h1>
+              
+              <p className="max-w-xl text-lg font-medium text-slate-300 leading-relaxed">
+                {course.description}
+              </p>
+
+              <div className="flex flex-wrap items-center gap-8 pt-4">
+                <div className="flex items-center gap-3">
+                  <Clock className="size-5 text-blue-400" />
+                  <div>
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Duración</p>
+                    <p className="text-sm font-black uppercase mt-1">{course.duration}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <BarChart className="size-5 text-blue-400" />
+                  <div>
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Nivel</p>
+                    <p className="text-sm font-black uppercase mt-1">{course.level}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <BookOpen className="size-5 text-blue-400" />
+                  <div>
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Recursos</p>
+                    <p className="text-sm font-black uppercase mt-1">Descargables</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Price Card Mobile Only */}
+            <div className="lg:hidden">
+              <EnrollCard course={course} isEnrolled={isEnrolled} enrollUrl={enrollUrl} />
+            </div>
           </div>
         </div>
+      </section>
 
-        <div className="w-full max-w-sm">
-          <Card className="border-slate-200 bg-white">
-            <CardHeader>
-              <CardTitle className="text-base text-slate-900">Acceso</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4 text-sm text-slate-600">
-              {course.id === "demo-course" ? (
-                <div>
-                  Vista demo. Configura Supabase y publica el curso para activar
-                  el acceso real.
-                </div>
-              ) : userId ? (
-                isEnrolled ? (
-                  <div className="space-y-3">
-                    <div>Ya estás inscrito.</div>
-                    <Button asChild className="w-full bg-blue-600 hover:bg-blue-500">
-                      <Link href="/aula-virtual">Ir al aula virtual</Link>
-                    </Button>
-                  </div>
+      <div className="mx-auto max-w-[1200px] px-4 -mt-12">
+        <div className="grid gap-12 lg:grid-cols-[1fr_380px]">
+          
+          <div className="space-y-12 pb-24">
+            {/* Syllabus Section */}
+            <section className="bg-white border border-slate-200 rounded-sm shadow-sm overflow-hidden mt-12 md:mt-0">
+              <div className="p-8 border-b border-slate-100 bg-slate-50/50">
+                <h2 className="text-[10px] font-black text-blue-600 tracking-[0.3em] uppercase">Contenido del Programa</h2>
+                <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tighter mt-1">Módulos y Lecciones</h3>
+              </div>
+
+              <div className="divide-y divide-slate-100">
+                {lessonsByModule.length > 0 ? (
+                  lessonsByModule.map(({ module, lessons: moduleLessons }, idx) => (
+                    <div key={module.id} className="group">
+                      <div className="flex items-center justify-between p-6 bg-white transition-colors group-hover:bg-slate-50 cursor-pointer">
+                        <div className="flex items-center gap-4">
+                          <span className="flex items-center justify-center size-8 bg-slate-900 text-white text-xs font-black italic">
+                            {(idx + 1).toString().padStart(2, '0')}
+                          </span>
+                          <h4 className="font-black text-slate-900 uppercase tracking-tight">{module.title}</h4>
+                        </div>
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                          {moduleLessons.length} Lecciones
+                        </span>
+                      </div>
+                      
+                      <div className="bg-slate-50/30 px-6 pb-6 space-y-2">
+                        {moduleLessons.map((lesson) => (
+                          <div 
+                            key={lesson.id}
+                            className="flex items-center justify-between gap-4 p-4 border border-slate-200 bg-white rounded-sm group/lesson hover:border-blue-300 transition-all"
+                          >
+                            <div className="flex items-center gap-3 min-w-0">
+                              {lesson.is_preview ? (
+                                <PlayCircle className="size-4 text-blue-600 shrink-0" />
+                              ) : (
+                                <Lock className="size-4 text-slate-300 shrink-0" />
+                              )}
+                              <span className="text-[11px] font-bold text-slate-700 uppercase tracking-tight truncate">
+                                {lesson.title}
+                              </span>
+                            </div>
+                            {lesson.is_preview && (
+                              <span className="shrink-0 px-2 py-0.5 bg-blue-100 text-blue-700 text-[8px] font-black uppercase tracking-widest">
+                                Gratis
+                              </span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))
                 ) : (
-                  <Button asChild className="w-full bg-blue-600 hover:bg-blue-500">
-                    <Link
-                      href={`/aula-virtual?checkout=course&courseSlug=${encodeURIComponent(slug)}`}
-                    >
-                      Contratar curso
-                    </Link>
-                  </Button>
-                )
-              ) : (
-                <Button asChild className="w-full bg-blue-600 hover:bg-blue-500">
-                  <Link
-                    href={`/aula-virtual?checkout=course&courseSlug=${encodeURIComponent(slug)}`}
-                  >
-                    Contratar curso
-                  </Link>
-                </Button>
-              )}
+                  <div className="p-12 text-center text-slate-400 font-bold uppercase tracking-widest text-[10px]">
+                    Contenido en proceso de carga operativa...
+                  </div>
+                )}
+              </div>
+            </section>
 
-              <Button asChild variant="outline" className="w-full border-slate-200 bg-white text-slate-900 hover:bg-slate-50">
-                <Link href="/cursos">Ver otros cursos</Link>
-              </Button>
-            </CardContent>
-          </Card>
+            {/* Certification Section */}
+            <section className="p-8 border border-slate-200 bg-white rounded-sm flex flex-col md:flex-row items-center gap-8 relative overflow-hidden">
+               <div className="absolute top-0 right-0 size-32 bg-blue-600/5 -rotate-12 translate-x-10 -translate-y-10" />
+               <div className="size-20 border-2 border-blue-600/20 bg-blue-50 flex items-center justify-center shrink-0">
+                  <BadgeCheck className="size-10 text-blue-600" />
+               </div>
+               <div className="space-y-2 text-center md:text-left">
+                  <h4 className="text-xl font-black text-slate-900 uppercase tracking-tighter">Certificación Vertex</h4>
+                  <p className="text-xs font-medium text-slate-500 leading-relaxed max-w-lg">
+                    Al completar este stack de ingeniería, recibirás un certificado digital con validación blockchain para respaldar tus competencias técnicas ante la industria.
+                  </p>
+               </div>
+            </section>
+          </div>
+
+          {/* Desktop Sidebar */}
+          <aside className="hidden lg:block -mt-32 pb-24">
+            <div className="sticky top-28">
+              <EnrollCard course={course} isEnrolled={isEnrolled} enrollUrl={enrollUrl} />
+            </div>
+          </aside>
+          
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function EnrollCard({ course, isEnrolled, enrollUrl }: { course: Course, isEnrolled: boolean, enrollUrl: string }) {
+  return (
+    <Card className="border-2 border-white bg-white shadow-2xl rounded-sm overflow-hidden">
+      <div className="relative aspect-video overflow-hidden">
+        <Image 
+          src={course.thumbnail || "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80"}
+          alt="Course Thumbnail"
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-slate-900/40 flex items-center justify-center">
+           <PlayCircle className="size-12 text-white/80" />
         </div>
       </div>
 
-      <div className="mt-10 grid gap-4 lg:grid-cols-2">
-        <Card className="border-slate-200 bg-white">
-          <CardHeader>
-            <CardTitle className="text-base text-slate-900">Módulos y lecciones</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 text-sm text-slate-600">
-            {lessonsByModule.length ? (
-              lessonsByModule.map(({ module, lessons: moduleLessons }) => (
-                <div key={module.id} className="space-y-2">
-                  <div className="font-medium text-slate-900">
-                    {module.title ?? "Módulo"}
-                  </div>
-                  <div className="space-y-1">
-                    {moduleLessons.length ? (
-                      moduleLessons.map((l) => (
-                        <div
-                          key={l.id}
-                          className="flex items-center justify-between gap-4 border border-slate-200 bg-white px-3 py-2"
-                        >
-                          <div className="truncate">{l.title ?? "Lección"}</div>
-                          <div className="text-xs text-slate-500">
-                            {l.is_preview ? "Preview" : "Solo inscritos"}
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="text-slate-500">Sin lecciones aún.</div>
-                    )}
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="text-slate-500">
-                Aún no hay módulos publicados para este curso.
-              </div>
-            )}
-          </CardContent>
-        </Card>
+      <CardContent className="p-8 space-y-6">
+        <div className="space-y-1">
+          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Inversión Total</p>
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-black text-slate-900">S/ {course.price}</span>
+            <span className="text-sm font-black text-slate-400">/ Pago Único</span>
+          </div>
+          <p className="text-[10px] font-bold text-blue-600 uppercase">Acceso de por vida • Actualizaciones</p>
+        </div>
 
-        <Card className="border-slate-200 bg-white">
-          <CardHeader>
-            <CardTitle className="text-base text-slate-900">Reproductor (MVP)</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 text-sm text-slate-600">
-            <div className="border border-slate-200 bg-slate-50 p-4">
-              Integra aquí YouTube privado, Vimeo, Bunny o Cloudflare Stream.
-            </div>
-            <div>
-              Recomendación: embebe el video y controla acceso con inscripción
-              (RLS + checks en servidor).
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+        <div className="space-y-3">
+          {isEnrolled ? (
+            <Button asChild className="w-full h-12 bg-slate-900 text-white rounded-sm font-black uppercase tracking-widest text-[10px] shadow-xl hover:bg-slate-800 transition-all">
+              <Link href="/aula-virtual" target="_blank" rel="noopener noreferrer">Ir al Aula Virtual</Link>
+            </Button>
+          ) : (
+            <Button asChild className="w-full h-12 bg-blue-600 text-white rounded-sm font-black uppercase tracking-widest text-[10px] shadow-xl shadow-blue-500/30 hover:bg-blue-700 transition-all hover:scale-[1.02]">
+              <Link href={enrollUrl} target="_blank" rel="noopener noreferrer">Inscribirme Ahora</Link>
+            </Button>
+          )}
+          
+          <p className="text-[9px] text-center font-black text-slate-400 uppercase tracking-widest">Garantía de Satisfacción 100%</p>
+        </div>
+
+        <div className="pt-6 border-t border-slate-100 space-y-4">
+          <p className="text-[10px] font-black text-slate-900 uppercase tracking-widest">¿Qué incluye?</p>
+          <ul className="space-y-3">
+            {[
+              "Lecciones en alta definición",
+              "Archivos de proyecto descargables",
+              "Soporte técnico directo",
+              "Certificado de finalización",
+              "Acceso al aula virtual 24/7"
+            ].map(item => (
+              <li key={item} className="flex items-center gap-3 text-[10px] font-bold text-slate-500 uppercase tracking-tight">
+                <ChevronRight className="size-3 text-blue-600" />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

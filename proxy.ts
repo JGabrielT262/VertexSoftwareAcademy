@@ -5,7 +5,7 @@ const PROTECTED_PREFIXES = ["/dashboard", "/admin", "/aula-virtual"] as const;
 const AUTH_PAGES = ["/login", "/register"] as const;
 const AULA_PREFIX = "/aula-virtual";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // Global Redirects for Auth to Aula Virtual
@@ -98,3 +98,5 @@ export const config = {
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
+
+export default proxy;

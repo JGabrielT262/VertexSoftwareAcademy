@@ -72,8 +72,8 @@ export default async function Home() {
                 placeholder="¿Qué necesitas construir?"
                 className="h-14 rounded-sm border-white bg-white shadow-xl shadow-blue-900/5 text-slate-900 placeholder:text-slate-400 px-6"
               />
-              <Button className="h-14 rounded-sm bg-blue-600 px-8 text-white hover:bg-blue-700 font-black uppercase tracking-widest shadow-xl shadow-blue-500/30 transition-all hover:scale-105">
-                Cotizar
+              <Button asChild className="h-14 rounded-sm bg-blue-600 px-8 text-white hover:bg-blue-700 font-black uppercase tracking-widest shadow-xl shadow-blue-500/30 transition-all hover:scale-105">
+                <Link href="/contactenos">Cotizar</Link>
               </Button>
             </div>
 
@@ -116,16 +116,18 @@ export default async function Home() {
               { title: "Integraciones", desc: "APIs, webhooks, pagos y sistemas.", icon: "03" },
               { title: "Cursos", desc: "Formación práctica ligada al aula virtual.", icon: "04" },
             ].map((c) => (
-              <div key={c.title} className="group relative rounded-2xl border border-white bg-white/50 backdrop-blur-sm p-8 transition-all hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-200">
-                <div className="h-12 w-12 rounded-xl bg-blue-600 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
-                  {c.icon}
+              <Link key={c.title} href="/contactenos" className="group">
+                <div className="relative h-full rounded-2xl border border-white bg-white/50 backdrop-blur-sm p-8 transition-all group-hover:shadow-2xl group-hover:shadow-blue-500/10 group-hover:border-blue-200">
+                  <div className="h-12 w-12 rounded-xl bg-blue-600 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
+                    {c.icon}
+                  </div>
+                  <div className="mt-6 text-lg font-black text-slate-900 uppercase tracking-tight group-hover:text-blue-600 transition-colors">
+                    {c.title}
+                  </div>
+                  <div className="mt-2 text-sm text-slate-500 font-medium leading-relaxed">{c.desc}</div>
+                  <div className="mt-6 h-1 w-12 bg-blue-600/20 group-hover:w-full transition-all duration-500" />
                 </div>
-                <div className="mt-6 text-lg font-black text-slate-900 uppercase tracking-tight">
-                  {c.title}
-                </div>
-                <div className="mt-2 text-sm text-slate-500 font-medium leading-relaxed">{c.desc}</div>
-                <div className="mt-6 h-1 w-12 bg-blue-600/20 group-hover:w-full transition-all duration-500" />
-              </div>
+              </Link>
             ))}
           </div>
 

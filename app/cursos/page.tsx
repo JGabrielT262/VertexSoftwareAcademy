@@ -339,7 +339,11 @@ export default async function CoursesPage() {
                         asChild
                         className="h-10 rounded-sm bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 shadow-lg shadow-blue-500/20 transition-all hover:scale-[1.05]"
                       >
-                        <Link href={`/aula-virtual?checkout=course&courseSlug=${encodeURIComponent(slug)}`}>
+                        <Link 
+                          href={`/aula-virtual?checkout=course&courseSlug=${encodeURIComponent(slug)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           Inscribirme
                         </Link>
                       </Button>

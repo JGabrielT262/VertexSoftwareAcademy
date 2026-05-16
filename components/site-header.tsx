@@ -19,9 +19,9 @@ export async function SiteHeader() {
 
   const contactEmail = await getSiteContent<string>(
     "contact.email",
-    "contacto@vertexsoftware.online"
+    "jgabrieltovarc@gmail.com"
   );
-  const contactPhone = await getSiteContent<string>("contact.phone", "+51 900 000 000");
+  const contactPhone = await getSiteContent<string>("contact.phone", "+51 910 999 206");
 
   if (hasEnv) {
     try {

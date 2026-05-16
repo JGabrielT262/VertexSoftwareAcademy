@@ -125,37 +125,29 @@ export function RouteTransitions({ children }: { children: React.ReactNode }) {
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div
           className={[
-            "absolute rounded-full blur-3xl opacity-90",
+            "absolute rounded-full blur-[100px] opacity-[0.6]",
             theme.topBlob,
-            "bg-[radial-gradient(circle_at_center,rgba(var(--accent-1),0.26),transparent_62%)]",
+            "bg-[radial-gradient(circle_at_center,rgba(var(--accent-1),0.2),transparent_70%)]",
           ].join(" ")}
         />
         <div
           className={[
-            "absolute rounded-full blur-3xl opacity-90",
+            "absolute rounded-full blur-[100px] opacity-[0.5]",
             theme.rightBlob,
-            "bg-[radial-gradient(circle_at_center,rgba(var(--accent-2),0.22),transparent_62%)]",
+            "bg-[radial-gradient(circle_at_center,rgba(var(--accent-2),0.15),transparent_70%)]",
           ].join(" ")}
         />
         <div
           className={[
-            "absolute rounded-full blur-3xl opacity-85",
+            "absolute rounded-full blur-[100px] opacity-[0.4]",
             theme.leftBlob,
-            "bg-[radial-gradient(circle_at_center,rgba(var(--accent-3),0.18),transparent_64%)]",
+            "bg-[radial-gradient(circle_at_center,rgba(var(--accent-3),0.1),transparent_70%)]",
           ].join(" ")}
         />
         <div
           className={[
-            "absolute inset-0 opacity-[0.08] [background-image:linear-gradient(to_right,rgba(255,255,255,0.10)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)]",
+            "absolute inset-0 opacity-[0.05] [background-image:linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)]",
             theme.grid,
-          ].join(" ")}
-        />
-        <div
-          className={[
-            "absolute left-1/2 top-1/2 h-[62rem] w-[62rem] -translate-x-1/2 -translate-y-1/2",
-            theme.sweep,
-            "opacity-[0.22] blur-2xl",
-            "bg-[linear-gradient(120deg,rgba(var(--accent-1),0.14),transparent_35%,rgba(var(--accent-2),0.16))]",
           ].join(" ")}
         />
       </div>
@@ -166,18 +158,18 @@ export function RouteTransitions({ children }: { children: React.ReactNode }) {
         className="pointer-events-none absolute inset-0 z-10"
         initial={{ opacity: 1 }}
         animate={{ opacity: 0 }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
       >
-        <div className="absolute inset-0 bg-[#f8fafc]/50 backdrop-blur-sm" />
+        <div className="absolute inset-0 bg-[#f8fafc]/40 backdrop-blur-md" />
       </motion.div>
 
       <motion.div
         key={pathname}
-        initial={{ opacity: 0, y: 8, filter: "blur(10px)" }}
-        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ 
-          duration: 0.4, 
-          ease: [0.22, 1, 0.36, 1] // Custom cubic-bezier for a "premium" feel
+          duration: 0.5, 
+          ease: [0.16, 1, 0.3, 1] 
         }}
       >
         {children}
